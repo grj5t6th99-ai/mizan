@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MIZAN — Al-Rwfaa Trading and Contracting W.L.L.</title>
-<meta name="description" content="Working demonstration of an accounting and contracting ERP built for Qatar.">
 <meta name="robots" content="noindex">
 <style>
 :root{
@@ -342,6 +341,40 @@ const AR = {
 "Payment":"سند صرف","Journal":"قيد يومية","Transfer":"تحويل","Payroll":"رواتب","Gratuity":"مكافأة نهاية خدمة",
 "Depreciation":"إهلاك","Accrual":"استحقاق","Stock Adjustment":"تسوية مخزون",
 "Asset Acquisition":"شراء أصل","Advance Received":"دفعة مقدمة مقبوضة",
+"Estimating & Tenders":"التسعير والمناقصات",
+"Measure progress":"قياس التقدّم","Value of work done":"قيمة الأعمال المنجزة",
+"Value of Work Done":"قيمة الأعمال المنجزة","Previously certified":"المعتمد سابقاً",
+"This period":"هذه الفترة","% complete":"٪ الإنجاز","Cost incurred":"التكلفة المتكبدة",
+"Earned margin":"الهامش المكتسب","Under-billed":"أعمال لم تُفوتر","Over-billed":"فوترة زائدة",
+"Certify this valuation":"اعتماد هذا التقييم","Valuation date":"تاريخ التقييم",
+"Valuation history":"سجل التقييمات","Income by bill item":"الإيراد حسب بنود الجدول",
+"Cost by bill item — click any line for the transactions behind it":"التكلفة حسب بنود الجدول — اضغط أي بند لعرض حركاته",
+"Cost breakdown":"تفصيل التكلفة","Total cost":"إجمالي التكلفة","Remaining":"المتبقي",
+"Measurement against the bill of quantities":"القياس مقابل جدول الكميات",
+"Contract value":"قيمة العقد","Supplier":"المورد","Account":"الحساب","New estimate":"تقدير جديد","Edit estimate":"تعديل التقدير",
+"Tender register":"سجل المناقصات","Bill of quantities":"جدول الكميات","Reference":"المرجع",
+"Draft":"مسودة","Submitted":"مقدّم","Won":"فائز","Lost":"خاسر",
+"Live tenders":"مناقصات قائمة","Win rate":"نسبة الفوز","Price":"السعر","Cost":"التكلفة",
+"Material":"مواد","Labour":"عمالة","Plant":"معدات","Subcontract":"مقاولو الباطن","Other":"أخرى",
+"Contingency %":"نسبة الاحتياطي ٪","Overhead %":"نسبة المصاريف العمومية ٪","Profit %":"نسبة الربح ٪",
+"Duration (days)":"المدة (أيام)","Submit to client":"تقديم للعميل","Mark lost":"تسجيل كخاسر",
+"Mark tender lost":"تسجيل المناقصة كخاسرة","Award — win the job":"الترسية — الفوز بالعمل",
+"Award — turn the tender into a job":"الترسية — تحويل المناقصة إلى مشروع",
+"Award the contract":"ترسية العقد","Cost codes":"رموز التكلفة",
+"Cost codes — budget against actual":"رموز التكلفة — الموازنة مقابل الفعلي",
+"Subcontract packages":"حزم مقاولي الباطن","Subcontract package":"حزمة مقاول باطن",
+"Award a subcontract package":"ترسية حزمة مقاول باطن","Order value (QR)":"قيمة الأمر (ر.ق)",
+"Awarded on":"تاريخ الترسية","Cost code":"رمز التكلفة","Variation order":"أمر تغيير",
+"Variation orders":"أوامر التغيير","Raise variation":"إصدار أمر تغيير",
+"Value to the client (QR)":"القيمة للعميل (ر.ق)","Cost to us (QR)":"التكلفة علينا (ر.ق)",
+"Extension of time claimed (days)":"تمديد المدة المطلوب (أيام)",
+"Budget":"الموازنة","Actual":"الفعلي","Committed":"مرتبط به","Forecast":"التوقّع",
+"Variance":"الفرق","Within":"ضمن الموازنة","Over":"تجاوز",
+"Margin as priced":"الهامش عند التسعير","Margin forecast":"الهامش المتوقّع",
+"Cost Value Reconciliation":"مطابقة التكلفة بالقيمة","Certified":"معتمد",
+"Markups are applied to cost":"تُضاف النسب على التكلفة","contingency":"احتياطي",
+"overhead":"مصاريف عمومية","profit":"ربح","Quantity":"الكمية","Section":"القسم","Days":"الأيام",
+"M2":"م٢","M3":"م٣","SUM":"مقطوعية","LOT":"دفعة",
 "About this demo":"عن هذا العرض التوضيحي","Show the guide again":"عرض الدليل مرة أخرى",
 "Start looking around":"ابدأ التصفح","Open Projects":"فتح المشاريع","Open Reports":"فتح التقارير",
 "Working demo":"عرض توضيحي عامل","Sample company":"شركة نموذجية","Advance Paid":"دفعة مقدمة مدفوعة","Advance":"دفعة مقدمة","Reversal":"قيد عكسي",
@@ -701,7 +734,7 @@ function seed(){
   return {
     company:{name:"Al-Rwfaa Trading and Contracting W.L.L.",nameAr:"شركة الرؤفاء للتجارة والمقاولات ذ.م.م",cr:"CR 84512",tax:"TIN 5104412",addr:"Building 14, Salwa Road, Doha, Qatar",tel:"+974 4444 1200"},
     settings:{lang:"en",currency:"QR",fyStart:"2026-01-01",fyEnd:"2026-12-31",retentionPct:10,gratuityDays:21,taxRate:10},
-    seq:{SI:1004,PI:1004,RV:1003,PV:1003,JV:1006,CT:0,TR:1001},
+    seq:{SI:1004,PI:1004,RV:1003,PV:1003,JV:1006,CT:0,TR:1001,EST:2600,SC:100,VO:100},
     accounts:COA.map(a=>({code:a[0],name:a[1],type:a[2],group:!!a[3],tag:a[4]||null})),
     journals:[],
     customers:[
@@ -725,6 +758,7 @@ function seed(){
       {id:"IT06",code:"AC-SPL-24",name:"Split AC Unit 2.0 Ton",unit:"NOS",cat:"HVAC",reorder:10,qty:0,cost:0,val:0,price:2380.00,acct:"1140"}
     ],
     stockMoves:[],
+    estimates:[], costCodes:[], packages:[], variations:[],
     projects:[
       {id:"P001",code:"PRJ-2601",name:"Lusail Marina Tower — MEP Fit-Out",customer:"C001",value:4200000,start:d+"01-15",end:d+"11-30",status:"In Progress",manager:"Eng. Yousef Baloch",location:"Lusail Marina District",retention:10,advance:420000,scope:"Complete MEP fit-out for 22 floors including LV distribution, HVAC ducting and plumbing risers."},
       {id:"P002",code:"PRJ-2602",name:"Msheireb Retail Block C — Electrical",customer:"C002",value:1650000,start:d+"02-01",end:d+"08-15",status:"In Progress",manager:"Eng. Rania Haddad",location:"Msheireb Downtown",retention:10,advance:0,scope:"Supply and installation of LV panels, containment and final fix for retail block C."},
@@ -782,7 +816,8 @@ const Ledger = {
   build(lines){
     return lines.filter(l=>l&&(R2(l.dr)||R2(l.cr)))
       .map(l=>{ if(!l.account) throw new Error("A line has an amount but no account."); return l; })
-      .map(l=>({account:l.account,dr:R2(l.dr||0),cr:R2(l.cr||0),memo:l.memo||"",project:l.project||"",party:l.party||""}));
+      .map(l=>({account:l.account,dr:R2(l.dr||0),cr:R2(l.cr||0),memo:l.memo||"",
+                project:l.project||"",party:l.party||"",costCode:l.costCode||""}));
   },
   check(lines){
     const L=Ledger.build(lines);
@@ -2368,7 +2403,9 @@ function projectDetail(m,p){
   m.appendChild(page(p.code+" — "+p.name,esc(p.scope||""),[
     {label:"Back to register",fn:()=>{TAB.proj="";draw();}},
     {label:"Revise end date",fn:()=>reviseForm(p)},
-    {label:"Edit project",fn:()=>projectForm(p)},
+    {label:"Measure progress",fn:()=>valuationForm(p)},
+    {label:"Variation order",fn:()=>variationForm(p)},
+    {label:"Subcontract package",fn:()=>packageForm(p)},
     {label:"Raise certificate",pri:true,fn:()=>salesForm()}]));
   if(f.late) m.appendChild(h('<div class="card" style="border-color:var(--maroon);background:var(--maroon-soft);margin-bottom:14px"><div class="body"><b style="color:var(--maroon)"><span class="flagdot"></span>'+esc(tp("overdueBy",f.over))+'</b> '+esc(t("Contract end date"))+': '+fmtDate(p.end)+'</div></div>'));
   const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>');
@@ -2408,6 +2445,74 @@ function projectDetail(m,p){
   ],(p.revisions||[]).slice().reverse(),
     {emptyTitle:"No revisions logged",emptyBody:"The end date has never been moved from the original contract date."})));
   m.appendChild(h('<div style="height:12px"></div>'));
+
+  /* ---- income and cost, measured against the bill of quantities ---- */
+  incomeAndCost(m,p);
+
+  /* ---- budget vs actual, the reason the estimate was carried over ---- */
+  const cc=costCodes(p.id);
+  if(cc.length){
+    const c=cvr(p);
+    const gg=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>');
+    gg.appendChild(stat("Budget",money(c.budget)));
+    gg.appendChild(stat("Actual",money(c.actual)));
+    gg.appendChild(stat("Committed",money(c.committed),isAR()?"مطلوب ولم يُفوتر":"ordered, not yet invoiced"));
+    gg.appendChild(stat("Forecast",money(c.forecast),"",c.overrun>0?"neg":"pos"));
+    gg.appendChild(stat("Margin as priced",money(c.marginPriced)));
+    gg.appendChild(stat("Margin forecast",money(c.marginForecast),
+      c.overrun>0?(isAR()?"تجاوز "+money(c.overrun):"overrun "+money(c.overrun)):"",
+      c.marginForecast<c.marginPriced?"neg":"pos"));
+    m.appendChild(gg); m.appendChild(h('<div style="height:14px"></div>'));
+    if(c.overrun>0) m.appendChild(h('<div class="card" style="border-color:var(--maroon);background:var(--maroon-soft);margin-bottom:14px"><div class="body"><b style="color:var(--maroon)"><span class="flagdot"></span>'+
+      esc(isAR()?"التوقّع يتجاوز الموازنة بمقدار "+money(c.overrun)
+        :"Forecast cost is "+money(c.overrun)+" above budget")+'</b><br><span style="color:var(--ink-soft)">'+
+      esc(isAR()?"الفارق ظاهر الآن، قبل انتهاء العمل، وهو الوقت الوحيد الذي يمكن فيه فعل شيء."
+        :"Visible now, before the job ends, which is the only time anything can be done about it.")+'</span></div></div>'));
+
+    m.appendChild(card("Cost codes — budget against actual",table([
+      {h:"Code",r:c2=>'<span class="code">'+esc(c2.code)+'</span>'},
+      {h:"Section",r:c2=>esc(c2.section||"—")},
+      {h:"Description",r:c2=>esc(c2.desc)},
+      {h:"Budget",num:1,r:c2=>money(ccBudget(c2))},
+      {h:"Actual",num:1,r:c2=>money(ccActual(c2).total)},
+      {h:"Committed",num:1,r:c2=>{const k=ccCommitted(c2);return k?money(k):"—";}},
+      {h:"Forecast",num:1,r:c2=>'<b>'+money(ccForecast(c2))+'</b>'},
+      {h:"Variance",num:1,cls:c2=>R2(ccBudget(c2)-ccForecast(c2))<0?"neg":"pos",
+       r:c2=>money(R2(ccBudget(c2)-ccForecast(c2)))},
+      {h:"Status",r:c2=>R2(ccBudget(c2)-ccForecast(c2))<0
+        ?'<span class="tag red">'+esc(isAR()?"تجاوز":"Over")+'</span>'
+        :'<span class="tag green">'+esc(isAR()?"ضمن الموازنة":"Within")+'</span>'}
+    ],cc)));
+    m.appendChild(h('<div style="height:12px"></div>'));
+
+    const pk=(DB.packages||[]).filter(x=>x.project===p.id);
+    if(pk.length){
+      m.appendChild(card("Subcontract packages",table([
+        {h:"Reference",r:x=>'<span class="code">'+esc(x.ref)+'</span>'},
+        {h:"Supplier",r:x=>esc(suppName(x.party))},
+        {h:"Description",r:x=>esc(x.title)},
+        {h:"Order value",num:1,r:x=>money(x.value)},
+        {h:"Certified",num:1,r:x=>money(pkgCertified(x.id))},
+        {h:"Committed",num:1,r:x=>money(R2(x.value-pkgCertified(x.id)))},
+        {h:"%",num:1,r:x=>x.value?Math.round(pkgCertified(x.id)/x.value*100)+"%":"—"},
+        {h:"Status",r:x=>'<span class="tag green">'+esc(x.status)+'</span>'}
+      ],pk)));
+      m.appendChild(h('<div style="height:12px"></div>'));
+    }
+    const vs=(DB.variations||[]).filter(x=>x.project===p.id);
+    if(vs.length){
+      m.appendChild(card("Variation orders",table([
+        {h:"Reference",r:x=>'<span class="code">'+esc(x.ref)+'</span>'},
+        {h:"Description",r:x=>esc(x.title)},
+        {h:"Value to the client (QR)",num:1,r:x=>money(x.sell)},
+        {h:"Cost to us (QR)",num:1,r:x=>money(x.cost)},
+        {h:"Margin",num:1,cls:()=>"pos",r:x=>money(R2(x.sell-x.cost))},
+        {h:"Days",num:1,r:x=>x.days||"—"},
+        {h:"Status",r:x=>'<span class="tag '+(x.status==="Approved"?"green":"amber")+'">'+esc(x.status)+'</span>'}
+      ],vs)));
+      m.appendChild(h('<div style="height:12px"></div>'));
+    }
+  }
 
   const costRows=postable().filter(a=>(a.type==="COS"||a.type==="EXPENSE")&&Ledger.show(a.code,{project:p.id}));
   m.appendChild(card("Cost breakdown",table([
@@ -2601,7 +2706,8 @@ function srow(label,val,cls,indent){
 const REPORTS=[
   ["tb","Trial Balance"],["pl","Profit & Loss"],["bs","Balance Sheet"],["gl","General Ledger"],
   ["ar","Receivables Ageing"],["ap","Payables Ageing"],["cb","Cash & Bank"],["inv","Inventory"],
-  ["exp","Expense Analysis"],["proj","Project Profitability"],["sched","Schedule Watch"]
+  ["exp","Expense Analysis"],["proj","Project Profitability"],["sched","Schedule Watch"],
+  ["cvr","Cost Value Reconciliation"],["vowd","Value of Work Done"]
 ];
 
 view("reports",{label:"Reports",code:"RPT",group:"Accounting",render(m){
@@ -2636,6 +2742,8 @@ view("reports",{label:"Reports",code:"RPT",group:"Accounting",render(m){
   else if(tv.cur==="inv") box.appendChild(repInv(per));
   else if(tv.cur==="exp") box.appendChild(repExp(f,per));
   else if(tv.cur==="sched") box.appendChild(repSched());
+  else if(tv.cur==="cvr") box.appendChild(repCVR());
+  else if(tv.cur==="vowd") box.appendChild(repVOWD());
   else box.appendChild(repProj(per));
   m.appendChild(box);
 }});
@@ -2837,7 +2945,15 @@ function userForm(u){
 
 view("settings",{label:"Company Setup",code:"SET",group:"Administration",render(m){
   m.appendChild(page("Company Setup","Entity details, financial year and the defaults every module inherits.",[
-    {label:"Reset all data",fn:()=>confirmDo("Delete every transaction and restore the demonstration company? This cannot be undone.",async()=>{await Store.wipe();DB=seed();save();CUR="dash";draw();toast("Data reset");})},
+    {label:"Reset all data",fn:()=>confirmDo("Delete everything and reload the demonstration company with its sample year? This cannot be undone.",async()=>{
+      await Store.wipe(); DB=seed();
+      DB.stockMoves=[]; DB.assets=[]; DB.journals=[];
+      DB.items.forEach(i=>{ i.qty=0; i.cost=0; i.val=0; });
+      /* Reset means "put it back how it arrived", which includes the
+         sample year. An earlier version wiped the transactions and left
+         an empty shell, so the dashboard read zero everywhere. */
+      demoPost();
+      save(); CUR="dash"; draw(); toast("Demonstration data reloaded");})},
     {label:"Show the guide again",fn:()=>welcomeGuide()},
     {label:"Edit settings",pri:true,fn:()=>settingsForm()}]));
   const c=DB.company, s=DB.settings;
@@ -2946,6 +3062,80 @@ function demoPost(){
     s[2].forEach(l=>moveStock(l[0],-l[1],0,"Sale "+no,s[0],""));
   });
 
+  /* ---- estimating: a won tender that became PRJ-2601, one live,
+         one lost, plus the cost codes and packages that show a job
+         drifting over budget while it is still running ---- */
+  const boq = [
+    ["Electrical","E-100","LV distribution boards and sub-mains","NOS",48,6400,900,0,0,150],
+    ["Electrical","E-200","Containment, cabling and final fix","MTR",16800,31.5,9.25,0,0,0],
+    ["HVAC","H-100","Ductwork supply and installation","M2",7200,0,0,0,210,0],
+    ["HVAC","H-200","Chilled water pipework and insulation","MTR",3800,88,34,6,0,0],
+    ["Plumbing","P-100","Sanitary fit-out and drainage","NOS",184,1250,380,0,0,0]
+  ].map(x=>({section:x[0],code:x[1],desc:x[2],unit:x[3],qty:x[4],
+             material:x[5],labour:x[6],plant:x[7],subcontract:x[8],other:x[9]}));
+
+  DB.estimates=[
+    {id:"E1",ref:"EST-2601",title:"Lusail Marina Tower — MEP Fit-Out",customer:"C001",
+     date:M(1)+"-08",submitted:M(1)+"-12",decided:M(1)+"-22",status:"Won",project:"P001",
+     contingencyPct:2,overheadPct:8,profitPct:12,durationDays:320,retentionPct:10,lines:boq},
+    {id:"E2",ref:"EST-2602",title:"Al Wakrah Clinic — MEP and finishes",customer:"C002",
+     date:M(6)+"-14",submitted:M(6)+"-20",status:"Submitted",project:"",
+     contingencyPct:2,overheadPct:8,profitPct:14,durationDays:180,retentionPct:10,
+     lines:[{section:"MEP",code:"0010",desc:"Mechanical and electrical package",unit:"SUM",qty:1,
+             material:410000,labour:185000,plant:24000,subcontract:260000,other:31000},
+            {section:"Finishes",code:"0020",desc:"Internal finishes",unit:"M2",qty:2400,
+             material:118,labour:64,plant:0,subcontract:0,other:0}]},
+    {id:"E3",ref:"EST-2603",title:"Industrial Area warehouse — civil works",customer:"C003",
+     date:M(4)+"-03",submitted:M(4)+"-09",decided:M(5)+"-02",status:"Lost",project:"",
+     outcome:"Price — above the winning bid by about 9%",
+     contingencyPct:2,overheadPct:8,profitPct:12,durationDays:150,retentionPct:5,
+     lines:[{section:"Civil",code:"0010",desc:"Slab, drainage and loading bays",unit:"SUM",qty:1,
+             material:295000,labour:140000,plant:78000,subcontract:0,other:22000}]}
+  ];
+
+  /* the won estimate becomes the budget for PRJ-2601 */
+  DB.costCodes = boq.map((l,i)=>({
+    id:"CC"+(i+1), project:"P001", code:l.code, section:l.section, desc:l.desc, unit:l.unit, qty:l.qty,
+    budget:{material:R2(l.qty*l.material),labour:R2(l.qty*l.labour),plant:R2(l.qty*l.plant),
+            subcontract:R2(l.qty*l.subcontract),other:R2(l.qty*l.other)},
+    sell:R2(l.qty*(l.material+l.labour+l.plant+l.subcontract+l.other)*1.02*1.08*1.12)}));
+
+  /* ductwork ordered ABOVE the priced rate: the overrun exists from
+     the day of the order, months before the final invoice */
+  DB.packages=[{id:"SC1",ref:"SC-101",project:"P001",party:"S004",
+    title:"Ductwork supply and installation",costCode:"CC3",value:1608000,
+    retentionPct:10,status:"Awarded",date:M(2)+"-15"}];
+
+  DB.variations=[{id:"VO1",ref:"VO-101",project:"P001",
+    title:"Additional distribution boards to levels 18-22",
+    sell:52000,cost:38000,days:0,status:"Approved",date:M(5)+"-06"}];
+  DB.costCodes.push({id:"CC6",project:"P001",code:"VO-101",section:"Variations",
+    desc:"Additional distribution boards to levels 18-22",unit:"SUM",qty:1,
+    budget:{material:0,labour:0,plant:0,subcontract:0,other:38000},sell:52000});
+  const p1=DB.projects.find(x=>x.id==="P001");
+  if(p1){
+    /* the contract is worth what it was priced at, plus the approved
+       variation; anything else and value of work done cannot be
+       compared with what has been certified */
+    p1.value=R2(DB.costCodes.reduce((s2,c)=>s2+(+c.sell||0),0));
+  }
+
+  /* progress measured against the bill of quantities, so the
+     certificates raised below are a consequence of the work rather
+     than a number somebody chose */
+  DB.valuations=[];
+  const measure=(date,pcts)=>{
+    const lines=Object.keys(pcts).map(k=>({costCode:k,pct:pcts[k]}));
+    const val=R2(lines.reduce((s,l)=>{const c=DB.costCodes.find(x=>x.id===l.costCode);
+      return c? s+R2((+c.sell||0)*l.pct/100) : s;},0));
+    const before=R2(DB.valuations.reduce((s,v)=>Math.max(s,v.valueToDate),0));
+    DB.valuations.push({id:"VAL"+date,ref:"IPC-"+(DB.valuations.length+1),project:"P001",
+      date,status:"Certified",lines,valueToDate:val,previous:before,thisPeriod:R2(val-before)});
+    return R2(val-before);
+  };
+  measure(M(3)+"-25",{CC1:35,CC2:60,CC3:30,CC4:20,CC5:0,CC6:0});
+  measure(M(6)+"-25",{CC1:55,CC2:85,CC3:48,CC4:45,CC5:15,CC6:100});
+
   /* advance payments received from clients against bank guarantees,
      posted before the first certificate that recovers them */
   [["P001","C001",1,"18",420000,"APG-QNB-2601"],["P003","C003",3,"16",88000,"APG-CBQ-2603"]].forEach(a=>{
@@ -2989,23 +3179,23 @@ function demoPost(){
   });
 
   /* subcontract & direct project costs */
-  [["P001","S004",4,285000,90000],["P001","S004",6,310000,60000],["P002","S004",5,168000,0],["P003","S003",5,96000,0]].forEach(s=>{
+  [["P001","S004",4,430000,90000,"CC3","SC1"],["P001","S004",6,285000,60000,"CC3","SC1"],["P002","S004",5,168000,0],["P003","S003",5,96000,0]].forEach(s=>{
     const no=nextNo("PI"), date=M(s[2])+"-20", gross=s[3], ret=R2(gross*0.1), adv=s[4]||0;
-    const lines=[{account:"5200",dr:gross,cr:0,project:s[0],memo:"Subcontract works"},
+    const lines=[{account:"5200",dr:gross,cr:0,project:s[0],costCode:s[5]||"",memo:"Subcontract works"},
                  {account:"2110",dr:0,cr:R2(gross-ret-adv),party:s[1],project:s[0],memo:"Payable"},
                  {account:"2115",dr:0,cr:ret,party:s[1],project:s[0],memo:"Retention withheld"}];
     if(adv) lines.push({account:"1150",dr:0,cr:adv,party:s[1],project:s[0],memo:"Advance recovered"});
     Ledger.post({no,date,source:"Purchase Invoice",project:s[0],memo:"Subcontract certificate — "+suppName(s[1]),lines,
       doc:{no,date,due:addDays(date,60),party:s[1],type:"Subcontractor certificate",project:s[0],
-        gross,retention:ret,advance:adv,receivable:R2(gross-ret-adv)}});
+        package:s[6]||"",gross,retention:ret,advance:adv,receivable:R2(gross-ret-adv)}});
   });
-  [["P001",3,"5210",180000],["P001",5,"5230",64000],["P001",6,"5240",38000],
+  [["P001",3,"5210",512000,"CC2"],["P001",5,"5230",214000,"CC4"],["P001",6,"5240",38000,"CC6"],
    ["P002",4,"5210",96000],["P002",6,"5230",29000],
    ["P003",4,"5210",118000],["P003",5,"5240",21000],
    ["P004",5,"5240",12000],["P004",7,"5210",16000]].forEach(x=>{
     const no=nextNo("PI"), date=M(x[1])+"-14";
     Ledger.post({no,date,source:"Purchase Invoice",project:x[0],memo:acctName(x[2])+" — "+projCode(x[0]),
-      lines:[{account:x[2],dr:x[3],cr:0,project:x[0],memo:"Direct cost"},
+      lines:[{account:x[2],dr:x[3],cr:0,project:x[0],costCode:x[4]||"",memo:"Direct cost"},
              {account:"2110",dr:0,cr:x[3],party:"S001",project:x[0],memo:"Supplier invoice"}],
       doc:{no,date,due:addDays(date,45),party:"S001",type:"Direct project cost",project:x[0],gross:x[3],retention:0,receivable:x[3]}});
   });
@@ -3125,6 +3315,8 @@ async function boot(){
   DB.items.forEach(i=>{ if(i.val==null) i.val=R2(i.qty*i.cost); });
   /* schedule baseline: every contract keeps its original end date and a revision log */
   DB.projects.forEach(p=>{ if(!p.baselineEnd) p.baselineEnd=p.end; if(!p.revisions) p.revisions=[]; });
+  DB.estimates=DB.estimates||[]; DB.costCodes=DB.costCodes||[];
+  DB.packages=DB.packages||[]; DB.variations=DB.variations||[]; DB.valuations=DB.valuations||[];
   /* a shared link can preselect language and landing screen:
      .../mizan/?lang=ar        opens in Arabic
      .../mizan/?view=projects  opens on a given module
@@ -3147,6 +3339,694 @@ window.MIZAN={get DB(){return DB;},Ledger,R2,money,qr,projFlag,canPost,stockValu
       stockVsLedger:R2(stockValue()-R2(Ledger.show("1140")+Ledger.show("1141")))};}};
 
 boot();
+
+
+/* ============================================================
+   MIZAN demo · 06 · the contracting flow
+
+   Estimate (BOQ priced by resource build-up) -> Quotation -> Won
+   -> the estimate becomes the project's BUDGET as cost codes
+   -> costs are tagged to a cost code
+   -> budget vs committed vs actual vs forecast
+
+   The same shape as the production system, in one file.
+   ============================================================ */
+
+const CAT = [
+  ["material","Material","مواد"], ["labour","Labour","عمالة"],
+  ["plant","Plant","معدات"], ["subcontract","Subcontract","مقاولو الباطن"],
+  ["other","Other","أخرى"]
+];
+
+/* Which cost column an account belongs to, so actuals line up with
+   the way the job was priced. */
+const ACCT_CAT = {
+  "5200":"subcontract","5210":"material","5100":"material","5250":"material",
+  "5220":"labour","5230":"plant","5240":"other"
+};
+
+const estLineCost = l => CAT.reduce((s,[k])=>s+R2((+l.qty||0)*(+l[k]||0)),0);
+const estCost = e => R2((e.lines||[]).reduce((s,l)=>s+estLineCost(l),0));
+const markup = e => (1+(+e.contingencyPct||0)/100)*(1+(+e.overheadPct||0)/100)*(1+(+e.profitPct||0)/100);
+const estSell = e => R2(estCost(e)*markup(e));
+const estLineSell = (e,l) => R2(estLineCost(l)*markup(e));
+const estMarginPct = e => { const s=estSell(e); return s? Math.round((s-estCost(e))/s*1000)/10 : null; };
+
+/* ---------- cost codes: budget, actual, committed, forecast ---------- */
+function costCodes(projectId){
+  return (DB.costCodes||[]).filter(c=>c.project===projectId);
+}
+function ccActual(cc){
+  let total=0; const by={material:0,labour:0,plant:0,subcontract:0,other:0};
+  DB.journals.forEach(j=>j.lines.forEach(l=>{
+    if(l.costCode!==cc.id) return;
+    const a=acct(l.account); if(!a||!["COS","EXPENSE"].includes(a.type)) return;
+    const v=R2(l.dr-l.cr); total=R2(total+v);
+    const k=ACCT_CAT[l.account]||"other"; by[k]=R2(by[k]+v);
+  }));
+  return {total,by};
+}
+const ccBudget = cc => R2(CAT.reduce((s,[k])=>s+(+cc.budget[k]||0),0));
+function ccCommitted(cc){
+  return R2((DB.packages||[]).filter(p=>p.costCode===cc.id&&p.status==="Awarded")
+    .reduce((s,p)=>s+R2(p.value-pkgCertified(p.id)),0));
+}
+const ccForecast = cc => Math.max(R2(ccActual(cc).total+ccCommitted(cc)), ccBudget(cc));
+const pkgCertified = id => R2(DB.journals.filter(j=>j.doc&&j.doc.package===id)
+  .reduce((s,j)=>s+(+j.doc.gross||0),0));
+
+function cvr(p){
+  const cc=costCodes(p.id);
+  const budget=R2(cc.reduce((s,c)=>s+ccBudget(c),0));
+  const actual=R2(cc.reduce((s,c)=>s+ccActual(c).total,0));
+  const committed=R2(cc.reduce((s,c)=>s+ccCommitted(c),0));
+  const forecast=R2(cc.reduce((s,c)=>s+ccForecast(c),0));
+  const vos=R2((DB.variations||[]).filter(v=>v.project===p.id&&v.status==="Approved")
+    .reduce((s,v)=>s+(+v.sell||0),0));
+  const revised=R2(p.value+vos);
+  return {budget,actual,committed,forecast,variations:vos,revised,
+    marginPriced:R2(revised-budget), marginForecast:R2(revised-forecast),
+    overrun:R2(forecast-budget), certified:projRevenue(p.id)};
+}
+
+/* ==================== ESTIMATES ==================== */
+view("estimates",{label:"Estimating & Tenders",code:"EST",group:"Contracts",render(m){
+  if(TAB.estId){ const e=(DB.estimates||[]).find(x=>x.id===TAB.estId);
+    if(e) return estimateDetail(m,e); TAB.estId=null; }
+  const list=DB.estimates||[];
+  const tv=tabs("est",[["all","All",list.length],
+    ["draft","Draft",list.filter(e=>e.status==="Draft").length],
+    ["sub","Submitted",list.filter(e=>e.status==="Submitted").length],
+    ["won","Won",list.filter(e=>e.status==="Won").length],
+    ["lost","Lost",list.filter(e=>e.status==="Lost").length]]);
+  m.appendChild(page("Estimating & Tenders",
+    isAR()?"تسعير الأعمال ببناء التكلفة من مواردها، ثم يتحول التقدير المعتمد إلى موازنة المشروع"
+      :"Price the work from its resources. When a tender is won the estimate becomes the project's budget.",
+    [{label:"New estimate",pri:true,fn:()=>estimateForm()}]));
+  m.appendChild(tv.el);
+
+  const rows=list.filter(e=>tv.cur==="all"||
+    (tv.cur==="draft"&&e.status==="Draft")||(tv.cur==="sub"&&e.status==="Submitted")||
+    (tv.cur==="won"&&e.status==="Won")||(tv.cur==="lost"&&e.status==="Lost"));
+
+  const won=list.filter(e=>e.status==="Won").length, lost=list.filter(e=>e.status==="Lost").length;
+  const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"></div>');
+  g.appendChild(stat("Live tenders",money(R2(list.filter(e=>e.status==="Submitted").reduce((s,e)=>s+estSell(e),0))),
+    list.filter(e=>e.status==="Submitted").length+" "+t("Submitted")));
+  g.appendChild(stat("Won",money(R2(list.filter(e=>e.status==="Won").reduce((s,e)=>s+estSell(e),0))),"",'pos'));
+  g.appendChild(stat("Lost",money(R2(list.filter(e=>e.status==="Lost").reduce((s,e)=>s+estSell(e),0))),"",'neg'));
+  g.appendChild(stat("Win rate",(won+lost)?Math.round(won/(won+lost)*100)+"%":"—",
+    isAR()?"حسب عدد المناقصات":"by number of tenders"));
+  m.appendChild(g); m.appendChild(h('<div style="height:14px"></div>'));
+
+  m.appendChild(card("Tender register",table([
+    {h:"Reference",r:e=>'<span class="code">'+esc(e.ref)+'</span>'},
+    {h:"Description",r:e=>'<b>'+esc(e.title)+'</b>'},
+    {h:"Client",r:e=>esc(custName(e.customer))},
+    {h:"Date",r:e=>fmtDate(e.date)},
+    {h:"Lines",num:1,r:e=>(e.lines||[]).length},
+    {h:"Cost",num:1,r:e=>money(estCost(e))},
+    {h:"Price",num:1,r:e=>'<b>'+money(estSell(e))+'</b>'},
+    {h:"Margin",num:1,cls:()=>"pos",r:e=>money(R2(estSell(e)-estCost(e)))},
+    {h:"%",num:1,r:e=>estMarginPct(e)!=null?estMarginPct(e)+"%":"—"},
+    {h:"Status",r:e=>{const tone={Won:"green",Lost:"red",Submitted:"amber"}[e.status]||"";
+      return '<span class="tag '+tone+'">'+esc(t(e.status))+'</span>'+
+        (e.project?' <span class="code">'+esc(projCode(e.project))+'</span>':"");}}
+  ],rows,{onRow:e=>{TAB.estId=e.id;draw();},
+    emptyTitle:"No estimates yet",emptyBody:"Price a job to begin."})));
+}});
+
+function estimateDetail(m,e){
+  const cost=estCost(e), sell=estSell(e);
+  m.appendChild(page(e.ref+" — "+e.title,esc(custName(e.customer)),[
+    {label:"Back",fn:()=>{TAB.estId=null;draw();}},
+    e.status==="Draft"?{label:"Edit",fn:()=>estimateForm(e)}:null,
+    e.status==="Draft"?{label:"Submit to client",fn:()=>{e.status="Submitted";e.submitted=today();commit("Submitted");}}:null,
+    (e.status==="Submitted")?{label:"Mark lost",fn:()=>lostForm(e)}:null,
+    (e.status==="Draft"||e.status==="Submitted")?{label:"Award — win the job",pri:true,fn:()=>awardForm(e)}:null
+  ].filter(Boolean)));
+
+  const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"></div>');
+  g.appendChild(stat("Cost",money(cost)));
+  CAT.forEach(([k,label])=>{
+    const v=R2((e.lines||[]).reduce((s,l)=>s+R2((+l.qty||0)*(+l[k]||0)),0));
+    if(v) g.appendChild(stat(label,money(v),cost?Math.round(v/cost*100)+"%":""));
+  });
+  g.appendChild(stat("Price",money(sell),"",'pos'));
+  g.appendChild(stat("Margin",money(R2(sell-cost)),estMarginPct(e)+"% "+(isAR()?"من السعر":"of price"),'pos'));
+  m.appendChild(g);
+  m.appendChild(h('<div class="card" style="margin:14px 0"><div class="body" style="font-size:12.5px;color:var(--ink-soft)">'+
+    esc(t("Markups are applied to cost"))+': '+e.contingencyPct+'% '+esc(t("contingency"))+' → '+
+    e.overheadPct+'% '+esc(t("overhead"))+' → '+e.profitPct+'% '+esc(t("profit"))+
+    '. '+esc(isAR()?"وبذلك يكون هامش الربح من السعر":"That gives a margin, as a share of the price, of")+
+    ' <b>'+estMarginPct(e)+'%</b>.</div></div>'));
+
+  m.appendChild(card("Bill of quantities",table([
+    {h:"Code",r:l=>'<span class="code">'+esc(l.code||"")+'</span>'},
+    {h:"Section",r:l=>esc(l.section||"—")},
+    {h:"Description",r:l=>'<b>'+esc(l.desc)+'</b>'},
+    {h:"Unit",r:l=>esc(t(l.unit||""))},
+    {h:"Quantity",num:1,r:l=>money(l.qty)},
+    {h:"Material",num:1,r:l=>+l.material?money(l.material):"—"},
+    {h:"Labour",num:1,r:l=>+l.labour?money(l.labour):"—"},
+    {h:"Plant",num:1,r:l=>+l.plant?money(l.plant):"—"},
+    {h:"Subcontract",num:1,r:l=>+l.subcontract?money(l.subcontract):"—"},
+    {h:"Cost",num:1,r:l=>money(estLineCost(l))},
+    {h:"Price",num:1,r:l=>'<b>'+money(estLineSell(e,l))+'</b>'}
+  ],e.lines||[])));
+}
+
+function estimateForm(existing){
+  const blank=()=>({code:"",section:"",desc:"",unit:"NOS",qty:1,material:0,labour:0,plant:0,subcontract:0,other:0});
+  formDoc({title:existing?"Edit estimate":"New estimate",wide:true,saveLabel:"Save estimate",
+    fields:v=>[
+      {n:"title",label:"Description",full:true,value:existing?existing.title:""},
+      {n:"customer",label:"Client",type:"select",options:DB.customers.map(c=>({v:c.id,l:c.name})),
+       value:existing?existing.customer:(DB.customers[0]||{}).id},
+      {n:"date",label:"Date",type:"date",value:existing?existing.date:today()},
+      {n:"contingencyPct",label:"Contingency %",type:"number",step:"0.5",value:existing?existing.contingencyPct:2},
+      {n:"overheadPct",label:"Overhead %",type:"number",step:"0.5",value:existing?existing.overheadPct:8},
+      {n:"profitPct",label:"Profit %",type:"number",step:"0.5",value:existing?existing.profitPct:12},
+      {n:"durationDays",label:"Duration (days)",type:"number",step:"1",value:existing?existing.durationDays:180},
+      {n:"retentionPct",label:"Retention %",type:"number",step:"0.5",value:existing?existing.retentionPct:10},
+      {n:"lines",label:"Bill of quantities",type:"lines",full:true,
+        newRow:blank,
+        cols:[
+          {h:"Section",n:"section",w:"11%"},
+          {h:"Code",n:"code",w:"9%"},
+          {h:"Description",n:"desc",w:"22%"},
+          {h:"Unit",n:"unit",type:"select",w:"9%",options:["NOS","MTR","M2","M3","TON","BAG","SET","SUM","LOT"]},
+          {h:"Quantity",n:"qty",type:"number",num:1,w:"9%"},
+          {h:"Material",n:"material",type:"number",num:1,w:"10%"},
+          {h:"Labour",n:"labour",type:"number",num:1,w:"9%"},
+          {h:"Plant",n:"plant",type:"number",num:1,w:"9%"},
+          {h:"Subcontract",n:"subcontract",type:"number",num:1,w:"10%"},
+          {h:"Cost",num:1,calc:r=>estLineCost(r)}
+        ]},
+      {n:"_sum",label:"",type:"html",value:""}
+    ],
+    note:v=>{
+      const e={lines:v.lines||[],contingencyPct:v.contingencyPct,overheadPct:v.overheadPct,profitPct:v.profitPct};
+      const c=estCost(e), s=estSell(e);
+      if(!c) return isAR()?"أضف بنوداً لبناء التكلفة.":"Add lines to build up the cost.";
+      let out=esc(t("Cost"))+": <b>"+qr(c)+"</b> &nbsp;·&nbsp; "+esc(t("Price"))+": <b>"+qr(s)+"</b> &nbsp;·&nbsp; "+
+        esc(t("Margin"))+": <b>"+qr(R2(s-c))+"</b> ("+estMarginPct(e)+"%)";
+      out+="<br><span style='color:var(--ink-soft)'>";
+      CAT.forEach(([k,label])=>{ const v2=R2((v.lines||[]).reduce((x,l)=>x+R2((+l.qty||0)*(+l[k]||0)),0));
+        if(v2) out+=esc(t(label))+" "+money(v2)+" &nbsp; "; });
+      return out+"</span>";
+    },
+    save:v=>{
+      if(!v.title.trim()) throw new Error("Give the estimate a description.");
+      const lines=(v.lines||[]).filter(l=>l.desc&&String(l.desc).trim());
+      if(!lines.length) throw new Error("An estimate needs at least one line.");
+      lines.forEach((l,i)=>{ if(!String(l.code||"").trim()) l.code=String((i+1)*10).padStart(4,"0"); });
+      const rec={title:v.title,customer:v.customer,date:v.date,
+        contingencyPct:+v.contingencyPct||0,overheadPct:+v.overheadPct||0,profitPct:+v.profitPct||0,
+        durationDays:+v.durationDays||180,retentionPct:+v.retentionPct||0,lines};
+      DB.estimates=DB.estimates||[];
+      if(existing) Object.assign(existing,rec);
+      else DB.estimates.push(Object.assign({id:"E"+Date.now(),ref:nextNo("EST"),status:"Draft",project:""},rec));
+      commit("Saved");
+    }});
+}
+
+function lostForm(e){
+  formDoc({title:"Mark tender lost",saveLabel:"Save",
+    fields:()=>[
+      {n:"reason",label:"Reason",type:"select",full:true,
+       options:["Price — above the winning bid","Programme — could not meet the dates",
+                "Client selected an incumbent","Prequalification not met","No award — tender cancelled"],
+       value:"Price — above the winning bid"},
+      {n:"note",label:"Notes",type:"textarea",full:true,value:""}
+    ],
+    note:()=>isAR()?"سبب الخسارة هو أهم حقل هنا: منه تتعلم كيف تُسعّر."
+      :"Why a tender was lost is the most useful field here. It is how pricing gets better.",
+    save:v=>{ e.status="Lost"; e.decided=today(); e.outcome=v.reason+(v.note?" — "+v.note:"");
+      commit("Recorded"); }});
+}
+
+/* The award: the estimate crosses into the ledger's world. */
+function awardForm(e){
+  formDoc({title:"Award — turn the tender into a job",wide:true,saveLabel:"Award the contract",
+    fields:()=>[
+      {n:"code",label:"Project code",value:"PRJ-"+String(2600+DB.projects.length+1)},
+      {n:"name",label:"Project name",full:true,value:e.title},
+      {n:"start",label:"Start date",type:"date",value:today()},
+      {n:"end",label:"Contract end date",type:"date",value:addDays(today(),e.durationDays||180)},
+      {n:"value",label:"Contract value (QR)",type:"number",value:estSell(e)},
+      {n:"manager",label:"Project manager",value:""},
+      {n:"location",label:"Site location",value:""}
+    ],
+    note:v=>{
+      const c=estCost(e);
+      return esc(isAR()?"سيصبح كل بند من بنود التسعير رمز تكلفة يحمل موازنته:"
+        :"Every priced line becomes a cost code carrying its budget:")+
+        " <b>"+(e.lines||[]).length+"</b> "+esc(t("Cost codes"))+
+        "<br>"+esc(t("Budget"))+": <b>"+qr(c)+"</b> &nbsp;·&nbsp; "+esc(t("Contract value"))+": <b>"+qr(R2(v.value))+
+        "</b> &nbsp;·&nbsp; "+esc(t("Margin"))+": <b>"+qr(R2(R2(v.value)-c))+"</b>"+
+        "<br><span style='color:var(--ink-soft)'>"+esc(isAR()
+          ?"من هذه اللحظة يمكن مقارنة كل ريال يُصرف بالريال الذي سُعّر به."
+          :"From this moment every riyal spent can be compared with the riyal that was priced.")+"</span>";
+    },
+    save:v=>{
+      guardPost();
+      const p={id:"P"+String(DB.projects.length+1).padStart(3,"0"),code:v.code,name:v.name,
+        customer:e.customer,start:v.start,end:v.end,baselineEnd:v.end,revisions:[],
+        value:R2(v.value),retention:e.retentionPct||10,advance:0,
+        manager:v.manager,location:v.location,status:"In Progress",scope:e.title};
+      DB.projects.push(p);
+      DB.costCodes=DB.costCodes||[];
+      (e.lines||[]).forEach(l=>{
+        DB.costCodes.push({id:"CC"+Date.now()+Math.floor(Math.random()*999),project:p.id,
+          code:l.code,section:l.section,desc:l.desc,unit:l.unit,qty:+l.qty||0,
+          budget:{material:R2((+l.qty||0)*(+l.material||0)),labour:R2((+l.qty||0)*(+l.labour||0)),
+                  plant:R2((+l.qty||0)*(+l.plant||0)),subcontract:R2((+l.qty||0)*(+l.subcontract||0)),
+                  other:R2((+l.qty||0)*(+l.other||0))},
+          sell:estLineSell(e,l)});
+      });
+      e.status="Won"; e.decided=today(); e.project=p.id;
+      TAB.estId=null; CUR="projects"; TAB.proj="detail"; TAB.projId=p.id;
+      commit("Contract awarded — "+p.code);
+    }});
+}
+
+/* ==================== SUBCONTRACT PACKAGES ==================== */
+function packageForm(project){
+  const codes=costCodes(project.id);
+  formDoc({title:"Award a subcontract package",wide:true,saveLabel:"Award package",
+    fields:()=>[
+      {n:"party",label:"Supplier",type:"select",options:DB.suppliers.map(s=>({v:s.id,l:s.name})),
+       value:(DB.suppliers[0]||{}).id},
+      {n:"title",label:"Description",full:true,value:""},
+      {n:"costCode",label:"Cost code",type:"select",
+       options:codes.map(c=>({v:c.id,l:c.code+" · "+c.desc+"  ("+money(ccBudget(c))+")"})),
+       value:(codes[0]||{}).id},
+      {n:"value",label:"Order value (QR)",type:"number",value:0},
+      {n:"retentionPct",label:"Retention %",type:"number",step:"0.5",value:10},
+      {n:"date",label:"Awarded on",type:"date",value:today()}
+    ],
+    note:v=>{
+      const cc=codes.find(c=>c.id===v.costCode); if(!cc) return "";
+      const b=R2(cc.budget.subcontract||ccBudget(cc)), o=R2(v.value);
+      if(!o) return esc(t("Budget"))+": "+qr(b);
+      const diff=R2(o-b);
+      return esc(t("Budget"))+": "+qr(b)+" &nbsp;·&nbsp; "+esc(t("Order value (QR)"))+": "+qr(o)+
+        (diff>0?'<br><span style="color:var(--maroon)">'+esc(isAR()
+          ?"الطلب يتجاوز الموازنة بـ "+money(diff)+" — يظهر التجاوز من يوم الطلب، لا من يوم الفاتورة."
+          :"That is "+money(diff)+" above the budget. The overrun exists from the day of the order, not the day of the invoice.")+'</span>'
+         :'<br><span style="color:var(--ledger-green,#14624A)">'+esc(isAR()?"ضمن الموازنة.":"Within budget.")+'</span>');
+    },
+    save:v=>{
+      guardPost();
+      if(R2(v.value)<=0) throw new Error("Enter the order value.");
+      DB.packages=DB.packages||[];
+      DB.packages.push({id:"SC"+Date.now(),ref:nextNo("SC"),project:project.id,party:v.party,
+        title:v.title||"Subcontract package",costCode:v.costCode,value:R2(v.value),
+        retentionPct:+v.retentionPct||0,status:"Awarded",date:v.date});
+      commit("Package awarded");
+    }});
+}
+
+/* ==================== VARIATIONS ==================== */
+function variationForm(project){
+  formDoc({title:"Variation order",wide:true,saveLabel:"Raise variation",
+    fields:()=>[
+      {n:"title",label:"Description",full:true,value:""},
+      {n:"sell",label:"Value to the client (QR)",type:"number",value:0},
+      {n:"cost",label:"Cost to us (QR)",type:"number",value:0},
+      {n:"days",label:"Extension of time claimed (days)",type:"number",step:"1",value:0},
+      {n:"approve",label:"Status",type:"select",options:[{v:"1",l:"Approved by the client"},{v:"0",l:"Submitted, awaiting a decision"}],value:"1"}
+    ],
+    note:v=>{
+      const s=R2(v.sell), c=R2(v.cost);
+      let out=esc(t("Margin"))+": <b>"+qr(R2(s-c))+"</b>";
+      if(+v.days>0) out+="<br>"+esc(isAR()?"سيُسجَّل تمديد المدة في سجل تعديلات المشروع باسم أمر التغيير."
+        :"The extension of time will be written to the project's revision log, naming this variation.");
+      out+="<br><span style='color:var(--ink-soft)'>"+esc(isAR()
+        ?"يرفع الاعتماد قيمة العقد والموازنة معاً، حتى لا يتجمّل التوقّع."
+        :"Approving raises the contract value AND the budget, so the forecast is not flattered.")+"</span>";
+      return out;
+    },
+    save:v=>{
+      guardPost();
+      if(!v.title.trim()) throw new Error("Describe the variation.");
+      const approved=v.approve==="1";
+      const vo={id:"VO"+Date.now(),ref:nextNo("VO"),project:project.id,title:v.title,
+        sell:R2(v.sell),cost:R2(v.cost),days:+v.days||0,
+        status:approved?"Approved":"Submitted",date:today()};
+      DB.variations=(DB.variations||[]).concat([vo]);
+      if(approved){
+        DB.costCodes=DB.costCodes||[];
+        DB.costCodes.push({id:"CC"+Date.now(),project:project.id,code:"VO-"+vo.ref.split("-").pop(),
+          section:"Variations",desc:v.title,unit:"SUM",qty:1,
+          budget:{material:0,labour:0,plant:0,subcontract:0,other:R2(v.cost)},sell:R2(v.sell)});
+        project.value=R2(project.value+R2(v.sell));
+        if(vo.days>0){
+          project.baselineEnd=project.baselineEnd||project.end;
+          const to=addDays(project.end,vo.days);
+          (project.revisions=project.revisions||[]).push({on:today(),from:project.end,to,
+            reason:"Variation "+vo.ref+" approved — "+v.title,
+            by:(DB.users.find(u=>u.id===DB.currentUser)||{}).name||""});
+          project.end=to;
+        }
+      }
+      commit("Variation "+vo.ref+" recorded");
+    }});
+}
+
+/* ==================== COST REPORT ==================== */
+function repCVR(){
+  let html='<table><thead><tr>'+
+    ['Code','Description','Budget','Actual','Committed','Forecast','Variance','Status']
+      .map((x,i)=>'<th'+(i>1&&i<7?' class="num"':'')+'>'+esc(t(x))+'</th>').join("")+'</tr></thead><tbody>';
+  let tb=0,ta=0,tk=0,tf=0;
+  DB.projects.forEach(p=>{
+    const cc=costCodes(p.id); if(!cc.length) return;
+    html+='<tr class="head"><td colspan="8">'+esc(p.code)+' — '+esc(p.name)+'</td></tr>';
+    cc.forEach(c=>{
+      const b=ccBudget(c), a=ccActual(c).total, k=ccCommitted(c), f=ccForecast(c), vnc=R2(b-f);
+      tb=R2(tb+b);ta=R2(ta+a);tk=R2(tk+k);tf=R2(tf+f);
+      html+='<tr><td class="code">'+esc(c.code)+'</td><td>'+esc(c.desc)+'</td>'+
+        '<td class="num">'+money(b)+'</td><td class="num">'+money(a)+'</td>'+
+        '<td class="num">'+(k?money(k):"—")+'</td><td class="num"><b>'+money(f)+'</b></td>'+
+        '<td class="num '+(vnc<0?"neg":"pos")+'">'+money(vnc)+'</td><td>'+
+        (vnc<0?'<span class="tag red">'+esc(isAR()?"تجاوز":"Over")+'</span>'
+             :'<span class="tag green">'+esc(isAR()?"ضمن الموازنة":"Within")+'</span>')+'</td></tr>';
+    });
+  });
+  html+='<tr class="total"><td colspan="2">'+esc(t("Total"))+'</td><td class="num">'+money(tb)+
+    '</td><td class="num">'+money(ta)+'</td><td class="num">'+money(tk)+'</td><td class="num">'+money(tf)+
+    '</td><td class="num '+(R2(tb-tf)<0?"neg":"pos")+'">'+money(R2(tb-tf))+'</td><td></td></tr></tbody></table>';
+  const node=h('<div class="scroll">'+html+'</div>');
+  node.appendChild(h('<p style="margin-top:12px;color:var(--ink-soft);font-size:12.5px">'+esc(isAR()
+    ?"التوقّع = المصروف فعلياً + المرتبط به بأوامر لم تُفوتر بعد، أو الموازنة أيهما أكبر. لهذا يتحرك التوقّع يوم إصدار أمر الشراء لا يوم وصول الفاتورة."
+    :"Forecast is what has been spent plus what is committed but not yet invoiced, or the budget, whichever is greater. That is why the forecast moves on the day an order is placed rather than the day the invoice arrives.")+'</p>'));
+  return sheet("Cost Value Reconciliation",tp("asAt",fmtDate(today())),node);
+}
+
+
+/* ============================================================
+   MIZAN demo · 07 · value of work done
+
+   A certificate should not be a number somebody types. It should
+   fall out of measuring what has actually been built against the
+   bill of quantities the job was priced from.
+
+     measure each cost code  ->  value of work done
+     less what was certified before  ->  this period
+     less retention and advance recovery  ->  net receivable
+
+   Measuring also produces the number a contractor argues about
+   most: value earned against cost incurred, and whether the job is
+   over-billed or under-billed.
+   ============================================================ */
+
+const valuations = pid => (DB.valuations||[]).filter(v=>v.project===pid)
+  .sort((a,b)=> a.date<b.date?-1: a.date>b.date?1:0);
+
+/* Value of work done for one cost code, at a given percentage. */
+const ccValue = (cc,pct) => R2((+cc.sell||0)*(+pct||0)/100);
+
+/* Cumulative measured position, from the latest certified valuation. */
+function measuredToDate(pid){
+  const done = valuations(pid).filter(v=>v.status==="Certified");
+  const last = done[done.length-1];
+  const by = {};
+  if(last) last.lines.forEach(l=>{ by[l.costCode]=+l.pct||0; });
+  return {byCode:by, value:R2(Object.keys(by).reduce((s,k)=>{
+    const cc=(DB.costCodes||[]).find(c=>c.id===k); return cc? s+ccValue(cc,by[k]) : s; },0)),
+    valuation:last||null};
+}
+
+/* Where the job stands: earned against spent, and billing position. */
+function workDone(p){
+  const cc = costCodes(p.id);
+  const m = measuredToDate(p.id);
+  const vowd = m.value;
+  const contract = R2(cc.reduce((s,c)=>s+(+c.sell||0),0));
+  const certified = projRevenue(p.id);           // revenue actually posted
+  const cost = R2(cc.reduce((s,c)=>s+ccActual(c).total,0));
+  return {
+    contract, vowd, certified, cost,
+    pctComplete: contract? Math.round(vowd/contract*1000)/10 : 0,
+    earnedMargin: R2(vowd-cost),
+    earnedMarginPct: vowd? Math.round((vowd-cost)/vowd*1000)/10 : null,
+    /* measured but not yet billed is accrued income; billed beyond
+       measurement is income taken too early */
+    underBilled: R2(vowd-certified),
+    byCode: m.byCode, lastValuation: m.valuation
+  };
+}
+
+/* ==================== MEASUREMENT ==================== */
+function valuationForm(p){
+  const cc = costCodes(p.id);
+  if(!cc.length) { toast(isAR()?"لا توجد رموز تكلفة لهذا المشروع.":"This project has no cost codes to measure."); return; }
+  const prev = measuredToDate(p.id);
+  const rows = cc.map(c=>({costCode:c.id,code:c.code,desc:c.desc,unit:c.unit,
+    qty:c.qty,sell:c.sell,pct:prev.byCode[c.id]||0}));
+
+  formDoc({title:"Measure progress",wide:true,saveLabel:"Certify this valuation",
+    fields:v=>[
+      {n:"date",label:"Valuation date",type:"date",value:today()},
+      {n:"advrec",label:"Advance recovered (QR)",type:"number",value:0},
+      {n:"lines",label:"Measurement against the bill of quantities",type:"lines",full:true,
+        newRow:()=>rows[0],
+        cols:[
+          {h:"Code",n:"code",w:"9%",readonly:true},
+          {h:"Description",n:"desc",w:"26%",readonly:true},
+          {h:"Contract value",num:1,w:"13%",calc:r=>+r.sell||0},
+          {h:"% complete",n:"pct",type:"number",num:1,w:"11%"},
+          {h:"Value of work done",num:1,w:"14%",calc:r=>{
+            const c=(DB.costCodes||[]).find(x=>x.id===r.costCode); return c?ccValue(c,r.pct):0;}},
+          {h:"Previously certified",num:1,w:"14%",calc:r=>{
+            const c=(DB.costCodes||[]).find(x=>x.id===r.costCode); return c?ccValue(c,prev.byCode[r.costCode]||0):0;}},
+          {h:"This period",num:1,w:"13%",calc:r=>{
+            const c=(DB.costCodes||[]).find(x=>x.id===r.costCode); if(!c) return 0;
+            return R2(ccValue(c,r.pct)-ccValue(c,prev.byCode[r.costCode]||0));}}
+        ],
+        value:rows}
+    ],
+    journal:v=>{
+      const lines=(v.lines||[]);
+      let gross=0;
+      lines.forEach(l=>{ const c=(DB.costCodes||[]).find(x=>x.id===l.costCode); if(!c) return;
+        gross=R2(gross+R2(ccValue(c,l.pct)-ccValue(c,prev.byCode[l.costCode]||0))); });
+      if(gross<=0) return [];
+      const ret=R2(gross*(p.retention||0)/100), adv=R2(v.advrec);
+      const L=[{account:tagCode("ar"),dr:R2(gross-ret-adv),cr:0,party:p.customer,project:p.id,memo:"Net receivable"}];
+      if(ret) L.push({account:tagCode("retention_rec"),dr:ret,cr:0,party:p.customer,project:p.id,memo:"Retention withheld"});
+      if(adv) L.push({account:tagCode("cust_adv"),dr:adv,cr:0,party:p.customer,project:p.id,memo:"Advance recovered"});
+      L.push({account:tagCode("sales_contract"),dr:0,cr:gross,project:p.id,memo:"Value of work done this period"});
+      return L;
+    },
+    note:v=>{
+      const lines=(v.lines||[]);
+      let vowd=0, before=0;
+      lines.forEach(l=>{ const c=(DB.costCodes||[]).find(x=>x.id===l.costCode); if(!c) return;
+        vowd=R2(vowd+ccValue(c,l.pct)); before=R2(before+ccValue(c,prev.byCode[l.costCode]||0)); });
+      const gross=R2(vowd-before);
+      const contract=R2(costCodes(p.id).reduce((s,c)=>s+(+c.sell||0),0));
+      const cost=R2(costCodes(p.id).reduce((s,c)=>s+ccActual(c).total,0));
+      let out = esc(t("Value of work done"))+": <b>"+qr(vowd)+"</b> ("+
+        (contract?Math.round(vowd/contract*1000)/10:0)+"% "+esc(isAR()?"من قيمة العقد":"of the contract")+")"+
+        " &nbsp;·&nbsp; "+esc(t("Previously certified"))+": "+qr(before)+
+        " &nbsp;·&nbsp; "+esc(t("This period"))+": <b>"+qr(gross)+"</b>";
+      if(gross<0) out+='<br><span style="color:var(--maroon)">'+esc(isAR()
+        ?"القياس أقل من المعتمد سابقاً؛ هذا يعني شهادة سالبة."
+        :"That measures less than was already certified, which would be a negative certificate.")+'</span>';
+      out+="<br><span style='color:var(--ink-soft)'>"+esc(t("Cost incurred"))+": "+money(cost)+
+        " &nbsp;·&nbsp; "+esc(t("Earned margin"))+": "+money(R2(vowd-cost))+
+        (vowd?" ("+Math.round((vowd-cost)/vowd*1000)/10+"%)":"")+"</span>";
+      return out;
+    },
+    save:v=>{
+      guardPost();
+      const lines=(v.lines||[]).map(l=>({costCode:l.costCode,pct:+l.pct||0}));
+      let vowd=0, before=0;
+      lines.forEach(l=>{ const c=(DB.costCodes||[]).find(x=>x.id===l.costCode); if(!c) return;
+        vowd=R2(vowd+ccValue(c,l.pct)); before=R2(before+ccValue(c,prev.byCode[l.costCode]||0)); });
+      const gross=R2(vowd-before);
+      if(gross<=0) throw new Error(isAR()?"لا توجد قيمة جديدة لاعتمادها."
+        :"There is no new value to certify. Measure more progress first.");
+      const ret=R2(gross*(p.retention||0)/100), adv=R2(v.advrec);
+      const no=nextNo("IPC");
+      const entry=Ledger.post({no,date:v.date,source:"Sales Invoice",project:p.id,
+        memo:"Payment certificate "+no+" — "+p.code,lines:formDocJournal.lines,
+        doc:{no,date:v.date,due:addDays(v.date,(DB.customers.find(c=>c.id===p.customer)||{}).terms||30),
+          party:p.customer,type:"Contract certificate",project:p.id,
+          gross,retention:ret,advance:adv,receivable:R2(gross-ret-adv),lines:[]}});
+      DB.valuations=(DB.valuations||[]).concat([{
+        id:"VAL"+Date.now(),ref:no,project:p.id,date:v.date,status:"Certified",
+        lines,valueToDate:vowd,previous:before,thisPeriod:gross,entry:entry.id}]);
+      commit("Certificate "+no+" raised from the measurement");
+    }});
+}
+
+/* ==================== INCOME AND COST IN DETAIL ==================== */
+
+/* Every posted transaction behind one cost code, so a figure can
+   always be taken apart. */
+function ccTransactions(ccId,category){
+  const out=[];
+  DB.journals.forEach(j=>j.lines.forEach(l=>{
+    if(l.costCode!==ccId) return;
+    const a=acct(l.account); if(!a||!["COS","EXPENSE"].includes(a.type)) return;
+    const k=ACCT_CAT[l.account]||"other";
+    if(category&&k!==category) return;
+    out.push({date:j.date,no:j.no,source:j.source,account:l.account,
+      party:l.party,memo:l.memo||j.memo,amount:R2(l.dr-l.cr),category:k});
+  }));
+  return out.sort((a,b)=>a.date<b.date?-1:1);
+}
+
+function costDetailModal(cc,category){
+  const rows=ccTransactions(cc.id,category);
+  const b=document.createElement("div"); b.style.display="contents";
+  b.appendChild(h('<div class="full"><span class="code">'+esc(cc.code)+'</span> <b>'+esc(cc.desc)+'</b>'+
+    (category?' · '+esc(t(CAT.find(c=>c[0]===category)[1])):"")+
+    '<br><span style="color:var(--ink-soft)">'+esc(t("Budget"))+' '+money(ccBudget(cc))+
+    ' · '+esc(t("Actual"))+' '+money(ccActual(cc).total)+'</span></div>'));
+  const w=h('<div class="full"></div>');
+  w.appendChild(table([
+    {h:"Date",r:r=>fmtDate(r.date)},
+    {h:"Voucher",r:r=>'<span class="code">'+esc(r.no)+'</span>'},
+    {h:"Source",r:r=>'<span class="tag">'+esc(t(r.source))+'</span>'},
+    {h:"Supplier",r:r=>r.party?esc(suppName(r.party)):"—"},
+    {h:"Account",r:r=>'<span class="code">'+esc(r.account)+'</span> '+esc(acctName(r.account))},
+    {h:"Description",r:r=>esc(r.memo)},
+    {h:"Amount",num:1,r:r=>money(r.amount)}
+  ],rows,{emptyTitle:"Nothing here yet",
+    emptyBody:isAR()?"لم تُحمّل أي تكلفة على هذا البند بعد.":"No cost has been charged to this line yet."}));
+  b.appendChild(w);
+  b.appendChild(h('<div class="full" style="text-align:end;border-top:2px solid var(--ink);padding-top:8px;font-family:var(--data)"><b>'+
+    esc(t("Total"))+': '+qr(R2(rows.reduce((s,r)=>s+r.amount,0)))+'</b></div>'));
+  modal({title:t("Cost breakdown"),wide:true,body:b});
+}
+
+/* The two tables that answer "where did the money come from, and
+   where did it go" for one job. */
+function incomeAndCost(m,p){
+  const cc=costCodes(p.id);
+  if(!cc.length) return;
+  const wd=workDone(p);
+
+  const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>');
+  g.appendChild(stat("Contract value",money(wd.contract)));
+  g.appendChild(stat("Value of work done",money(wd.vowd),wd.pctComplete+"% "+(isAR()?"مكتمل":"complete")));
+  g.appendChild(stat("Certified",money(wd.certified)));
+  g.appendChild(stat("Cost incurred",money(wd.cost)));
+  g.appendChild(stat("Earned margin",money(wd.earnedMargin),
+    wd.earnedMarginPct!=null?wd.earnedMarginPct+"%":"",wd.earnedMargin<0?"neg":"pos"));
+  g.appendChild(stat(wd.underBilled>=0?"Under-billed":"Over-billed",money(Math.abs(wd.underBilled)),
+    isAR()?"المقيس مقابل المعتمد":"measured against certified",wd.underBilled<0?"neg":""));
+  m.appendChild(g);
+  m.appendChild(h('<div style="height:14px"></div>'));
+
+  if(Math.abs(wd.underBilled)>0.5){
+    const under=wd.underBilled>0;
+    m.appendChild(h('<div class="card" style="border-color:var(--'+(under?"amber":"maroon")+
+      ');background:var(--'+(under?"amber":"maroon")+'-soft);margin-bottom:14px"><div class="body">'+
+      '<b style="color:var(--'+(under?"amber":"maroon")+')">'+
+      esc(under?(isAR()?"أعمال مقيسة لم تُفوتر بعد: "+money(wd.underBilled)
+                       :"Work measured but not yet certified: "+money(wd.underBilled))
+              :(isAR()?"فُوتر أكثر مما قِيس بمقدار "+money(-wd.underBilled)
+                       :"Certified ahead of measurement by "+money(-wd.underBilled)))+'</b><br>'+
+      '<span style="color:var(--ink-soft)">'+esc(under
+        ?(isAR()?"هذه إيرادات مستحقة — ارفع شهادة دفع لتحصيلها."
+                :"That is earned income sitting unbilled. Raise a certificate for it.")
+        :(isAR()?"الإيراد أُخذ قبل إنجاز العمل؛ سيتعين تسويته."
+                :"Income has been taken ahead of the work. It will have to unwind."))+'</span></div></div>'));
+  }
+
+  /* ---- income: what each line of the bill has earned ---- */
+  const inc=table([
+    {h:"Code",r:c=>'<span class="code">'+esc(c.code)+'</span>'},
+    {h:"Description",r:c=>esc(c.desc)},
+    {h:"Contract value",num:1,r:c=>money(c.sell)},
+    {h:"% complete",num:1,r:c=>(wd.byCode[c.id]||0)+"%"},
+    {h:"Value of work done",num:1,r:c=>money(ccValue(c,wd.byCode[c.id]||0))},
+    {h:"Remaining",num:1,r:c=>money(R2((+c.sell||0)-ccValue(c,wd.byCode[c.id]||0)))}
+  ],cc);
+  const itb=inc.querySelector&&inc.querySelector("tbody");
+  if(itb) itb.appendChild(h('<tr style="font-weight:700;border-top:1px solid var(--ink)"><td colspan="2">'+
+    esc(t("Total"))+'</td><td class="num">'+money(wd.contract)+'</td><td></td><td class="num">'+
+    money(wd.vowd)+'</td><td class="num">'+money(R2(wd.contract-wd.vowd))+'</td></tr>'));
+  m.appendChild(card("Income by bill item",inc));
+  m.appendChild(h('<div style="height:12px"></div>'));
+
+  /* ---- cost: every line split the way it was priced, clickable ---- */
+  const cost=table([
+    {h:"Code",r:c=>'<span class="code">'+esc(c.code)+'</span>'},
+    {h:"Description",r:c=>esc(c.desc)},
+    {h:"Material",num:1,r:c=>{const v=ccActual(c).by.material;return v?money(v):"—";}},
+    {h:"Labour",num:1,r:c=>{const v=ccActual(c).by.labour;return v?money(v):"—";}},
+    {h:"Plant",num:1,r:c=>{const v=ccActual(c).by.plant;return v?money(v):"—";}},
+    {h:"Subcontract",num:1,r:c=>{const v=ccActual(c).by.subcontract;return v?money(v):"—";}},
+    {h:"Other",num:1,r:c=>{const v=ccActual(c).by.other;return v?money(v):"—";}},
+    {h:"Total cost",num:1,r:c=>'<b>'+money(ccActual(c).total)+'</b>'},
+    {h:"Budget",num:1,r:c=>money(ccBudget(c))},
+    {h:"Variance",num:1,cls:c=>R2(ccBudget(c)-ccForecast(c))<0?"neg":"pos",
+     r:c=>money(R2(ccBudget(c)-ccForecast(c)))}
+  ],cc,{onRow:c=>costDetailModal(c)});
+  const ctb=cost.querySelector&&cost.querySelector("tbody");
+  if(ctb){
+    const tot=k=>money(R2(cc.reduce((s,c)=>s+ccActual(c).by[k],0)));
+    ctb.appendChild(h('<tr style="font-weight:700;border-top:1px solid var(--ink)"><td colspan="2">'+
+      esc(t("Total"))+'</td><td class="num">'+tot("material")+'</td><td class="num">'+tot("labour")+
+      '</td><td class="num">'+tot("plant")+'</td><td class="num">'+tot("subcontract")+
+      '</td><td class="num">'+tot("other")+'</td><td class="num">'+money(wd.cost)+
+      '</td><td class="num">'+money(R2(cc.reduce((s,c)=>s+ccBudget(c),0)))+'</td><td></td></tr>'));
+  }
+  m.appendChild(card("Cost by bill item — click any line for the transactions behind it",cost));
+  m.appendChild(h('<div style="height:12px"></div>'));
+
+  /* ---- the measurement history ---- */
+  const vals=valuations(p.id);
+  m.appendChild(card("Valuation history",table([
+    {h:"Reference",r:v=>'<span class="code">'+esc(v.ref)+'</span>'},
+    {h:"Date",r:v=>fmtDate(v.date)},
+    {h:"Value of work done",num:1,r:v=>money(v.valueToDate)},
+    {h:"Previously certified",num:1,r:v=>money(v.previous)},
+    {h:"This period",num:1,r:v=>'<b>'+money(v.thisPeriod)+'</b>'},
+    {h:"% complete",num:1,r:v=>{const c=R2(costCodes(p.id).reduce((s,x)=>s+(+x.sell||0),0));
+      return c?Math.round(v.valueToDate/c*1000)/10+"%":"—";}}
+  ],vals,{emptyTitle:"Nothing here yet",
+    emptyBody:isAR()?"لم يُقَس أي تقدّم بعد."
+      :"No progress has been measured yet. Use \u201cMeasure progress\u201d to value the work."})));
+  m.appendChild(h('<div style="height:12px"></div>'));
+}
+
+/* ==================== VALUE OF WORK DONE REPORT ==================== */
+function repVOWD(){
+  let html='<table><thead><tr>'+
+    ['Project','Client','Contract value','Value of work done','% complete','Certified',
+     'Under-billed','Cost incurred','Earned margin','%']
+      .map((x,i)=>'<th'+(i>1?' class="num"':'')+'>'+esc(t(x))+'</th>').join("")+'</tr></thead><tbody>';
+  let tc=0,tv=0,tk=0,tx=0;
+  DB.projects.forEach(p=>{
+    const cc=costCodes(p.id); if(!cc.length) return;
+    const w=workDone(p);
+    tc=R2(tc+w.contract); tv=R2(tv+w.vowd); tk=R2(tk+w.certified); tx=R2(tx+w.cost);
+    html+='<tr><td class="code">'+esc(p.code)+'</td><td>'+esc(custName(p.customer))+
+      '</td><td class="num">'+money(w.contract)+'</td><td class="num"><b>'+money(w.vowd)+
+      '</b></td><td class="num">'+w.pctComplete+'%</td><td class="num">'+money(w.certified)+
+      '</td><td class="num'+(w.underBilled<0?' neg':'')+'">'+money(w.underBilled)+
+      '</td><td class="num">'+money(w.cost)+'</td><td class="num '+(w.earnedMargin<0?"neg":"pos")+'">'+
+      money(w.earnedMargin)+'</td><td class="num">'+(w.earnedMarginPct!=null?w.earnedMarginPct+'%':'—')+
+      '</td></tr>';
+  });
+  html+='<tr class="total"><td colspan="2">'+esc(t("Total"))+'</td><td class="num">'+money(tc)+
+    '</td><td class="num">'+money(tv)+'</td><td></td><td class="num">'+money(tk)+
+    '</td><td class="num">'+money(R2(tv-tk))+'</td><td class="num">'+money(tx)+
+    '</td><td class="num '+(R2(tv-tx)<0?"neg":"pos")+'">'+money(R2(tv-tx))+'</td><td></td></tr></tbody></table>';
+  const node=h('<div class="scroll">'+html+'</div>');
+  node.appendChild(h('<p style="margin-top:12px;color:var(--ink-soft);font-size:12.5px">'+esc(isAR()
+    ?"قيمة الأعمال المنجزة تُقاس من جدول الكميات، لا تُكتب يدوياً. الفرق بينها وبين المعتمد هو إيراد مستحق لم يُفوتر (أو إيراد أُخذ مبكراً)، والفرق بينها وبين التكلفة هو الهامش المكتسب فعلاً حتى تاريخه."
+    :"Value of work done is measured against the bill of quantities rather than typed. The gap to what has been certified is income earned but not yet billed \u2014 or billed too early. The gap to cost incurred is the margin actually earned so far.")+'</p>'));
+  return sheet("Value of Work Done",tp("asAt",fmtDate(today())),node);
+}
 
 </script>
 </body>
