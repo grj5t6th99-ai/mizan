@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIZAN — Trading &amp; Contracting ERP</title>
+<title>MIZAN — Al-Rwfaa Trading and Contracting W.L.L.</title>
+<meta name="description" content="Working demonstration of an accounting and contracting ERP built for Qatar.">
+<meta name="robots" content="noindex">
 <style>
 :root{
   --ink:#191C1B;
@@ -697,7 +699,7 @@ const ROLES = {
 function seed(){
   const d = "2026-";
   return {
-    company:{name:"Al Rayyan Trading & Contracting W.L.L.",nameAr:"شركة الريان للتجارة والمقاولات ذ.م.م",cr:"CR 84512",tax:"TIN 5104412",addr:"Building 14, Salwa Road, Doha, Qatar",tel:"+974 4444 1200"},
+    company:{name:"Al-Rwfaa Trading and Contracting W.L.L.",nameAr:"شركة الرؤفاء للتجارة والمقاولات ذ.م.م",cr:"CR 84512",tax:"TIN 5104412",addr:"Building 14, Salwa Road, Doha, Qatar",tel:"+974 4444 1200"},
     settings:{lang:"en",currency:"QR",fyStart:"2026-01-01",fyEnd:"2026-12-31",retentionPct:10,gratuityDays:21,taxRate:10},
     seq:{SI:1004,PI:1004,RV:1003,PV:1003,JV:1006,CT:0,TR:1001},
     accounts:COA.map(a=>({code:a[0],name:a[1],type:a[2],group:!!a[3],tag:a[4]||null})),
