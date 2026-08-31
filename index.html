@@ -179,6 +179,24 @@ html[dir=rtl] .stat b{direction:ltr;text-align:start}
 @media(max-width:880px){html[dir=rtl] .rail{right:0;left:auto;transform:translateX(100%)}
   html[dir=rtl] .rail.open{transform:none}}
 
+/* ---------- the project account statement ---------- */
+table.acct{width:100%;border-collapse:collapse;margin-bottom:4px}
+table.acct td,table.acct th{padding:4px 8px;border-bottom:1px solid var(--rule);font-size:12.5px}
+table.acct th{font-family:var(--data);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:start;border-bottom:1px solid var(--ink)}
+table.acct th.num,table.acct td.num{text-align:end;font-family:var(--data);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+table.acct td.sec{font-family:var(--display);font-size:15px;padding:10px 0 4px;border:0}
+html[dir="rtl"] table.acct td.sec{font-family:var(--ar-display,var(--ui-ar))}
+table.acct tr.head td{background:var(--field);font-weight:600;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+table.acct tr.sub td{font-weight:600;border-top:1px solid var(--rule-strong)}
+table.acct tr.total td{font-weight:700;border-top:1.5px solid var(--ink);
+  border-bottom:3px double var(--ink)}
+.a4 .pa table.acct td,.a4 .pa table.acct th{border-color:#ddd;font-size:10.5px;padding:3px 6px}
+.a4 .pa table.acct tr.head td{background:#f4f4f4;color:#333}
+.a4 .pa table.acct td.sec{font-size:13px}
+
 /* ---------- documents that leave the building ---------- */
 #printarea{display:none}
 .docpreview{background:var(--field);padding:16px;border-radius:4px;overflow-x:auto}
@@ -386,7 +404,14 @@ const AR = {
 "Timesheets & Plant":"الجداول الزمنية والمعدات",
 "Site Operations":"عمليات الموقع",
 "Programme and milestones":"البرنامج الزمني والبوابات",
-"Approvals":"الاعتمادات","Waiting for approval":"بانتظار الاعتماد","Waiting":"منتظر",
+"Approvals":"الاعتمادات",
+"Project Account":"حساب المشروع","Project account":"حساب المشروع",
+"Print project account":"طباعة حساب المشروع","Income":"الإيرادات","Expenditure":"المصروفات",
+"Gross certified":"إجمالي المعتمد","Net receivable":"صافي المستحق",
+"Total certified":"إجمالي المعتمد","Total expenditure":"إجمالي المصروفات",
+"Position":"الموقف","Approved variations":"أوامر التغيير المعتمدة",
+"Revised contract value":"قيمة العقد المعدلة","Certified to date":"المعتمد حتى تاريخه",
+"Margin to date":"الهامش حتى تاريخه","Voucher":"السند","Waiting for approval":"بانتظار الاعتماد","Waiting":"منتظر",
 "Nothing waiting":"لا شيء ينتظر","Oldest":"الأقدم","Raised by":"قدّمه",
 "Physical count":"الجرد الفعلي","Physical stock count":"جرد المخزون الفعلي",
 "Record the count":"تسجيل الجرد","Count date":"تاريخ الجرد","Counted by":"قام بالجرد",
@@ -2718,6 +2743,7 @@ function projectDetail(m,p){
   m.appendChild(page(p.code+" — "+p.name,esc(p.scope||""),[
     {label:"Back to register",fn:()=>{TAB.proj="";draw();}},
     {label:"Revise end date",fn:()=>reviseForm(p)},
+    {label:"Print project account",fn:()=>printProjectAccount(p)},
     {label:"Add milestone",fn:()=>milestoneForm(p)},
     {label:"Measure progress",fn:()=>valuationForm(p)},
     {label:"Variation order",fn:()=>variationForm(p)},
@@ -3025,7 +3051,7 @@ function srow(label,val,cls,indent){
 const REPORTS=[
   ["tb","Trial Balance"],["pl","Profit & Loss"],["bs","Balance Sheet"],["gl","General Ledger"],
   ["ar","Receivables Ageing"],["ap","Payables Ageing"],["cb","Cash & Bank"],["inv","Inventory"],
-  ["exp","Expense Analysis"],["proj","Project Profitability"],["sched","Schedule Watch"],
+  ["exp","Expense Analysis"],["proj","Project Profitability"],["pacct","Project Account"],["sched","Schedule Watch"],
   ["cvr","Cost Value Reconciliation"],["vowd","Value of Work Done"],["lab","Labour and Plant"],["ret","Aged Retention"],["cash","Cash Flow Forecast"],["wip","Work in Progress"],["prog","Programme"],
   ["sub","Subcontractor Liability"],["ovh","Overhead Budget"],["util","Equipment Utilisation"],
   ["tax","Income Tax Workings"]
@@ -3062,6 +3088,7 @@ view("reports",{label:"Reports",code:"RPT",group:"Accounting",render(m){
   else if(tv.cur==="cb") box.appendChild(repCB(f,per));
   else if(tv.cur==="inv") box.appendChild(repInv(per));
   else if(tv.cur==="exp") box.appendChild(repExp(f,per));
+  else if(tv.cur==="pacct") box.appendChild(repProjectAccount());
   else if(tv.cur==="sched") box.appendChild(repSched());
   else if(tv.cur==="cvr") box.appendChild(repCVR());
   else if(tv.cur==="vowd") box.appendChild(repVOWD());
@@ -8317,6 +8344,178 @@ function eInvoiceExport(j){
       a.download=(d.no||"invoice")+".json"; document.body.appendChild(a); a.click(); a.remove();
       toast((d.no||"invoice")+".json"); }},
     {label:"Close",pri:true,fn:closeModal}]});
+}
+
+
+/* ============================================================
+   MIZAN demo · 17 · the project account
+
+   Project Profitability gives one line per contract. The project
+   screen breaks income and cost down by bill item. Neither is the
+   thing a project manager is actually asked for, which is: show me
+   everything that went into this job.
+
+   This is that statement. Every certificate raised, every riyal
+   spent, with the voucher number beside it, in one document that
+   prints.
+   ============================================================ */
+
+/* Every posting that put revenue on this contract. */
+function projectIncomeRows(pid){
+  const out=[];
+  DB.journals.forEach(j=>{
+    let gross=0;
+    j.lines.forEach(l=>{
+      if(l.project!==pid) return;
+      const a=acct(l.account); if(!a||a.type!=="REVENUE") return;
+      gross=R2(gross+R2(l.cr-l.dr));
+    });
+    if(!gross) return;
+    const d=j.doc||{};
+    out.push({date:j.date,no:j.no,type:d.type||j.source,
+      ref:d.ref||"",party:d.party||"",gross,
+      retention:+d.retention||0,advance:+d.advance||0,
+      net:d.receivable!=null?+d.receivable:gross,memo:j.memo,jid:j.id});
+  });
+  return out.sort((a,b)=>a.date<b.date?-1:1);
+}
+
+/* Every posting that put cost on this contract, with the cost code
+   it was charged to and the category it belongs in. */
+function projectCostRows(pid){
+  const out=[];
+  DB.journals.forEach(j=>{
+    j.lines.forEach(l=>{
+      if(l.project!==pid) return;
+      const a=acct(l.account); if(!a||!["COS","EXPENSE"].includes(a.type)) return;
+      const amt=R2(l.dr-l.cr); if(!amt) return;
+      const cc=(DB.costCodes||[]).find(c=>c.id===l.costCode);
+      out.push({date:j.date,no:j.no,source:j.source,account:l.account,
+        party:l.party||(j.doc&&j.doc.party)||"",
+        code:cc?cc.code:"",codeDesc:cc?cc.desc:"",
+        category:ACCT_CAT[l.account]||"other",
+        memo:l.memo||j.memo,amount:amt,jid:j.id});
+    });
+  });
+  return out.sort((a,b)=>a.date<b.date?-1:1);
+}
+
+function projectAccount(p,opts){
+  opts=opts||{};
+  const inc=projectIncomeRows(p.id);
+  const cost=projectCostRows(p.id);
+  const wd=(typeof workDone==="function")?workDone(p):null;
+  const c=(typeof cvr==="function")?cvr(p):null;
+  const vos=(DB.variations||[]).filter(v=>v.project===p.id&&v.status==="Approved");
+
+  const totalInc=R2(inc.reduce((s,x)=>s+x.gross,0));
+  const totalRet=R2(inc.reduce((s,x)=>s+x.retention,0));
+  const totalCost=R2(cost.reduce((s,x)=>s+x.amount,0));
+
+  const byCat={}; CAT.forEach(([k])=>byCat[k]=[]);
+  cost.forEach(r=>(byCat[r.category]||byCat.other).push(r));
+
+  const money2=v=>money(v);
+  const rowsHtml=rows=>rows.map(r=>
+    '<tr><td>'+fmtDate(r.date)+'</td><td class="code">'+esc(r.no)+'</td>'+
+    '<td>'+esc(r.code?r.code:"—")+'</td>'+
+    '<td>'+esc(r.party?(suppName(r.party)||custName(r.party)):"—")+'</td>'+
+    '<td>'+esc((r.memo||"").slice(0,52))+'</td>'+
+    '<td class="num">'+money2(r.amount)+'</td></tr>').join("");
+
+  let html='';
+
+  /* ---- income ---- */
+  html+='<table class="acct"><thead><tr><td colspan="7" class="sec">'+
+    esc(t("Income"))+'</td></tr><tr>'+
+    ['Date','Voucher','Type','Client','Gross certified','Retention','Net receivable']
+      .map((x,i)=>'<th'+(i>3?' class="num"':'')+'>'+esc(t(x))+'</th>').join("")+
+    '</tr></thead><tbody>';
+  if(!inc.length) html+='<tr><td colspan="7" style="color:var(--ink-soft)">'+
+    esc(isAR()?"لم يُصدر أي مستخلص بعد.":"Nothing has been certified yet.")+'</td></tr>';
+  inc.forEach(r=>{
+    html+='<tr><td>'+fmtDate(r.date)+'</td><td class="code">'+esc(r.no)+
+      '</td><td>'+esc(t(r.type))+'</td><td>'+esc(custName(r.party)||"—")+
+      '</td><td class="num">'+money2(r.gross)+'</td><td class="num">'+
+      (r.retention?money2(r.retention):"—")+'</td><td class="num">'+money2(r.net)+'</td></tr>';
+  });
+  html+='<tr class="sub"><td colspan="4">'+esc(t("Total certified"))+'</td>'+
+    '<td class="num">'+money2(totalInc)+'</td><td class="num">'+money2(totalRet)+
+    '</td><td class="num">'+money2(R2(inc.reduce((s,x)=>s+x.net,0)))+'</td></tr></tbody></table>';
+
+  /* ---- cost, by the category it was priced in ---- */
+  html+='<table class="acct" style="margin-top:18px"><thead><tr><td colspan="6" class="sec">'+
+    esc(t("Expenditure"))+'</td></tr><tr>'+
+    ['Date','Voucher','Cost code','Supplier','Description','Amount']
+      .map((x,i)=>'<th'+(i===5?' class="num"':'')+'>'+esc(t(x))+'</th>').join("")+
+    '</tr></thead><tbody>';
+  CAT.forEach(([k,label])=>{
+    const rows=byCat[k]||[]; if(!rows.length) return;
+    const sub=R2(rows.reduce((s,r)=>s+r.amount,0));
+    html+='<tr class="head"><td colspan="6">'+esc(t(label))+'</td></tr>';
+    html+=rowsHtml(rows);
+    html+='<tr class="sub"><td colspan="5">'+esc(t("Total"))+' — '+esc(t(label))+
+      '</td><td class="num">'+money2(sub)+'</td></tr>';
+  });
+  if(!cost.length) html+='<tr><td colspan="6" style="color:var(--ink-soft)">'+
+    esc(isAR()?"لم تُحمَّل أي تكلفة بعد.":"No cost has been charged yet.")+'</td></tr>';
+  html+='<tr class="total"><td colspan="5">'+esc(t("Total expenditure"))+
+    '</td><td class="num">'+money2(totalCost)+'</td></tr></tbody></table>';
+
+  /* ---- where it leaves the job ---- */
+  const line=(l,v2,cls)=>'<tr'+(cls?' class="'+cls+'"':'')+'><td>'+esc(l)+
+    '</td><td class="num">'+money2(v2)+'</td></tr>';
+  html+='<table class="acct" style="margin-top:18px;max-width:560px"><thead><tr>'+
+    '<td colspan="2" class="sec">'+esc(t("Position"))+'</td></tr></thead><tbody>'+
+    line(t("Contract value"),p.value-(vos.reduce((s,v)=>s+v.sell,0)))+
+    (vos.length?line(t("Approved variations"),R2(vos.reduce((s,v)=>s+v.sell,0))):"")+
+    line(t("Revised contract value"),p.value,"sub")+
+    line(t("Certified to date"),totalInc)+
+    (wd?line(t("Value of work done"),wd.vowd):"")+
+    (wd?line(wd.underBilled>=0?t("Under-billed"):t("Over-billed"),Math.abs(wd.underBilled)):"")+
+    line(t("Cost to date"),totalCost)+
+    (c?line(t("Committed, uncertified"),c.committed):"")+
+    (c?line(t("Forecast cost"),c.forecast):"")+
+    line(t("Margin to date"),R2(totalInc-totalCost),"sub")+
+    (c?line(t("Margin forecast"),c.marginForecast,"total"):"")+
+    '</tbody></table>';
+
+  return {html,totalInc,totalCost,inc,cost};
+}
+
+/* ---- the report screen ---- */
+function repProjectAccount(){
+  const wrap=h('<div></div>');
+  const pick=DB.projects[0];
+  const sel=h('<select class="inp" style="max-width:420px;margin-bottom:14px"></select>');
+  DB.projects.forEach(p=>sel.appendChild(h('<option value="'+esc(p.id)+'">'+
+    esc(p.code+" — "+p.name)+'</option>')));
+  const box=h('<div></div>');
+  const render=()=>{
+    const p=DB.projects.find(x=>x.id===sel.value)||pick;
+    const a=projectAccount(p);
+    box.innerHTML="";
+    const node=h('<div class="scroll">'+a.html+'</div>');
+    box.appendChild(sheet("Project Account",
+      p.code+" — "+p.name+" · "+custName(p.customer)+" · "+tp("asAt",fmtDate(today())),node));
+    const pr=h('<button class="btn" style="margin-top:12px">'+esc(t("Print"))+'</button>');
+    pr.onclick=()=>printProjectAccount(p);
+    box.appendChild(pr);
+  };
+  sel.onchange=render;
+  wrap.appendChild(sel); wrap.appendChild(box); render();
+  return wrap;
+}
+
+function printProjectAccount(p){
+  const a=projectAccount(p);
+  printDoc("Project account","حساب المشروع",
+    letterhead("PROJECT ACCOUNT","حساب المشروع",p.code)+
+    '<table class="meta"><tr><td>'+bi("Project","المشروع")+'<br><b>'+esc(p.name)+'</b><br>'+
+      esc(custName(p.customer))+'</td><td class="num">'+bi("As at","كما في")+' '+fmtDate(today())+
+      '<br>'+bi("Start","البداية")+' '+fmtDate(p.start)+
+      '<br>'+bi("End","النهاية")+' '+fmtDate(p.end)+'</td></tr></table>'+
+    '<div class="pa">'+a.html+'</div>');
 }
 
 </script>
