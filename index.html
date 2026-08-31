@@ -179,6 +179,17 @@ html[dir=rtl] .stat b{direction:ltr;text-align:start}
 @media(max-width:880px){html[dir=rtl] .rail{right:0;left:auto;transform:translateX(100%)}
   html[dir=rtl] .rail.open{transform:none}}
 
+/* ---------- spend against budget, at a glance ---------- */
+.costbar{position:relative;height:9px;background:var(--field);border:1px solid var(--rule);
+  border-radius:2px;overflow:hidden;min-width:110px}
+.costbar i{display:block;height:100%;float:inline-start;background:var(--ledger-green,#14624A)}
+.costbar i.over{background:var(--maroon)}
+.costbar i.c{background:var(--amber);opacity:.55}
+.costbar u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);
+  text-decoration:none}
+html[dir="rtl"] .costbar i{float:right}
+html[dir="rtl"] .costbar u{transform:scaleX(-1)}
+
 /* ---------- the project account statement ---------- */
 table.acct{width:100%;border-collapse:collapse;margin-bottom:4px}
 table.acct td,table.acct th{padding:4px 8px;border-bottom:1px solid var(--rule);font-size:12.5px}
@@ -405,7 +416,20 @@ const AR = {
 "Site Operations":"عمليات الموقع",
 "Programme and milestones":"البرنامج الزمني والبوابات",
 "Approvals":"الاعتمادات",
-"Project Account":"حساب المشروع","Project account":"حساب المشروع",
+"Project Account":"حساب المشروع",
+"Cost Analysis":"تحليل التكاليف","By bill item":"حسب بنود الجدول","By resource":"حسب الموارد",
+"Transactions":"الحركات","All contracts":"كل العقود","Cost by resource":"التكلفة حسب الموارد",
+"Cost analysis across every contract":"تحليل التكلفة لكل العقود",
+"Where the money goes, across the business":"أين تذهب النقود على مستوى الشركة",
+"Every cost charged to this contract":"كل تكلفة حُمِّلت على هذا العقد",
+"Spend against budget":"المنفق مقابل الموازنة","Share of budget":"الحصة من الموازنة",
+"Share of spend":"الحصة من الإنفاق","Resource":"المورد","Every resource":"كل الموارد",
+"Every bill item":"كل البنود","Nothing matches":"لا توجد نتائج",
+"Over or under budget":"فائض أو تجاوز الموازنة",
+"No contracts have a budget":"لا توجد عقود بموازنة",
+"Contracts in progress":"عقود قيد التنفيذ","Cost analysis by contract":"تحليل التكلفة لكل عقد",
+"Work done":"الأعمال المنجزة","Cost to date":"التكلفة حتى تاريخه","complete":"مكتمل",
+"Margin as priced":"الهامش المسعَّر","No contracts with a budget":"لا توجد عقود بموازنة","Project account":"حساب المشروع",
 "Print project account":"طباعة حساب المشروع","Income":"الإيرادات","Expenditure":"المصروفات",
 "Gross certified":"إجمالي المعتمد","Net receivable":"صافي المستحق",
 "Total certified":"إجمالي المعتمد","Total expenditure":"إجمالي المصروفات",
@@ -1489,15 +1513,84 @@ view("dash",{label:"Dashboard",code:"—",group:"Overview",render(m){
   const bank=DB.accounts.filter(a=>a.tag==="bank").reduce((s,a)=>s+Ledger.bal(a.code,f),0);
   const cash=DB.accounts.filter(a=>a.tag==="cash").reduce((s,a)=>s+Ledger.bal(a.code,f),0);
   const rev=Ledger.typeTotal("REVENUE",f), np=Ledger.netProfit(f);
+
+  /* ---------- the contracts come first ----------
+     An earlier version opened on bank, receivables, payables and net
+     profit. Every one of those figures is true, and together they
+     describe a trading company. A contractor's first question is not
+     what the bank balance is; it is whether the jobs are going to
+     finish at the margin they were priced at. So the contracts lead,
+     and the ledger balances sit underneath them. */
+  const live=DB.projects.filter(p=>(DB.costCodes||[]).some(c=>c.project===p.id));
+  const pos=live.map(p=>({p,c:cvr(p),w:workDone(p)}));
+  const sum=k=>R2(pos.reduce((s2,x)=>s2+(+x.c[k]||0),0));
+  const sumW=k=>R2(pos.reduce((s2,x)=>s2+(+x.w[k]||0),0));
+  const revised=sum("revised"), budget=sum("budget"), forecast=sum("forecast");
+  const vowd=sumW("vowd"), certified=sumW("certified"), spent=sum("actual");
+  const marginPriced=R2(revised-budget), marginForecast=R2(revised-forecast);
+  const overruns=[]; live.forEach(p=>costCodes(p.id).forEach(c=>{
+    if(R2(ccBudget(c)-ccForecast(c))<0) overruns.push({p,c}); }));
+
   const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(168px,1fr))"></div>');
+  [["Contracts in progress",live.length,money(revised)],
+   ["Value of work done",money(vowd),revised?Math.round(vowd/revised*1000)/10+"% "+t("complete"):""],
+   ["Cost to date",money(spent)],
+   ["Committed, uncertified",money(sum("committed")),isAR()?"مرتبط ولم يُفوتر":"ordered, not yet invoiced"],
+   ["Margin as priced",money(marginPriced),
+     revised?Math.round(marginPriced/revised*1000)/10+"%":""],
+   ["Margin forecast",money(marginForecast),
+     revised?Math.round(marginForecast/revised*1000)/10+"%":"",
+     marginForecast<marginPriced?"neg":"pos"],
+   ["Under-billed",money(R2(vowd-certified)),isAR()?"مقيس ولم يُفوتر":"measured, not yet certified",
+     R2(vowd-certified)>0?"neg":""],
+   ["Cost codes over budget",overruns.length,"",overruns.length?"neg":"pos"]
+  ].forEach(s2=>g.appendChild(stat(s2[0],s2[1],s2[2],s2[3])));
+  m.appendChild(g);
+
+  if(R2(marginPriced-marginForecast)>0.5)
+    m.appendChild(h('<div class="card" style="border-color:var(--maroon);background:var(--maroon-soft);margin:14px 0"><div class="body"><b style="color:var(--maroon)"><span class="flagdot"></span>'+
+      esc(isAR()
+        ?"الهامش المتوقع أقل من الهامش المسعَّر بمقدار "+money(R2(marginPriced-marginForecast))
+        :"Forecast margin is "+money(R2(marginPriced-marginForecast))+" below the margin these contracts were priced at")+
+      '</b><br><span style="color:var(--ink-soft)">'+
+      esc(isAR()?overruns.length+" بنداً تجاوز موازنته. الفارق ظاهر الآن، قبل انتهاء الأعمال."
+        :overruns.length+" cost code"+(overruns.length===1?"":"s")+" forecast over budget. Visible now, before the work finishes.")+
+      '</span></div></div>'));
+
+  /* ---------- cost analysis, per contract, on the front page ---------- */
+  m.appendChild(card("Cost analysis by contract",table([
+    {h:"",w:"18px",r:x=>projFlag(x.p).late?'<span class="flagdot"></span>':""},
+    {h:"Project",r:x=>'<span class="code">'+esc(x.p.code)+'</span> '+esc(x.p.name)},
+    {h:"Contract value",num:1,r:x=>money(x.c.revised)},
+    {h:"Work done",num:1,r:x=>money(x.w.vowd)},
+    {h:"%",num:1,r:x=>x.w.pctComplete+"%"},
+    {h:"Certified",num:1,r:x=>money(x.w.certified)},
+    {h:"Budget",num:1,r:x=>money(x.c.budget)},
+    {h:"Cost to date",num:1,r:x=>money(x.c.actual)},
+    {h:"Committed",num:1,r:x=>x.c.committed?money(x.c.committed):"—"},
+    {h:"Forecast cost",num:1,r:x=>'<b>'+money(x.c.forecast)+'</b>'},
+    {h:"Margin forecast",num:1,cls:x=>x.c.marginForecast<0?"neg":"pos",
+     r:x=>money(x.c.marginForecast)},
+    {h:"%",num:1,r:x=>x.c.revised?Math.round(x.c.marginForecast/x.c.revised*1000)/10+"%":"—"},
+    {h:"Status",r:x=>x.c.overrun>0
+      ?'<span class="tag red">'+esc(isAR()?"تجاوز "+money(x.c.overrun):"over "+money(x.c.overrun))+'</span>'
+      :'<span class="tag green">'+esc(isAR()?"ضمن الموازنة":"within budget")+'</span>'}
+  ],pos,{onRow:x=>{CUR="projects";TAB.proj="detail";TAB.projId=x.p.id;draw();},
+    emptyTitle:"No contracts with a budget",
+    emptyBody:isAR()?"احسب تقديراً ورسِّه ليصبح موازنة."
+      :"Price an estimate and award it, and it becomes the budget."})));
+  m.appendChild(h('<div style="height:14px"></div>'));
+
+  /* the ledger, underneath the contracts rather than in front of them */
+  const g2=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(168px,1fr))"></div>');
   [["Bank balances",money(bank)],["Cash & petty cash",money(cash)],
    ["Trade receivables",money(Ledger.show(tagCode("ar"),f))],["Trade payables",money(Ledger.show(tagCode("ap"),f))],
    ["Retention held by clients",money(Ledger.show(tagCode("retention_rec"),f))],
    ["Revenue year to date",money(rev)],
    ["Net profit year to date",money(np),null,np<0?"neg":"pos"],
    ["Gratuity provision",money(Ledger.show(tagCode("gratuity"),f))]
-  ].forEach(s=>g.appendChild(stat(s[0],s[1],s[2],s[3])));
-  m.appendChild(g);
+  ].forEach(s2=>g2.appendChild(stat(s2[0],s2[1],s2[2],s2[3])));
+  m.appendChild(g2);
 
   const expSoon=expiringAll(30);
   if(expSoon.length){
@@ -3606,10 +3699,12 @@ function demoPost(){
   })();
 
   /* contract certificates */
-  const certs=[["P001","C001",[[3,620000],[5,740000],[7,690000]]],
-               ["P002","C002",[[3,310000],[5,395000],[7,288000]]],
-               ["P003","C003",[[4,240000],[6,275000]]],
-               ["P004","C004",[[5,42000],[7,38000]]]];
+  /* Only PRJ-2601 is certified by hand here. The other three raise
+     their certificates from the measurement in awardDemo below —
+     leaving these in as well certified the same work twice, which
+     showed on the dashboard as being over a million riyals
+     over-billed. */
+  const certs=[["P001","C001",[[3,620000],[5,740000],[7,690000]]]];
   certs.forEach(c=>{
     const proj=DB.projects.find(p=>p.id===c[0]), cust=DB.customers.find(x=>x.id===c[1]);
     c[2].forEach((cert,i)=>{
@@ -8516,6 +8611,247 @@ function printProjectAccount(p){
       '<br>'+bi("Start","البداية")+' '+fmtDate(p.start)+
       '<br>'+bi("End","النهاية")+' '+fmtDate(p.end)+'</td></tr></table>'+
     '<div class="pa">'+a.html+'</div>');
+}
+
+
+/* ============================================================
+   MIZAN demo · 18 · cost analysis
+
+   The question a contractor asks more often than any other: where
+   is the money going on this job, and is it going where I priced
+   it to go.
+
+   Four ways of looking at the same figures, because the answer
+   depends on who is asking. The commercial manager wants it by
+   bill item. The buyer wants it by material, labour, plant and
+   subcontract. The accountant wants the transactions. The owner
+   wants all four contracts on one page.
+   ============================================================ */
+
+/* A bar that shows spend against budget at a glance. Anything past
+   the budget line runs red. */
+function costBar(actual,committed,budget){
+  const max=Math.max(budget,R2(actual+committed),1);
+  const pa=Math.min(actual/max*100,100);
+  const pc=Math.min(committed/max*100,100-pa);
+  const pb=Math.min(budget/max*100,100);
+  const over=R2(actual+committed)>budget;
+  return '<div class="costbar" title="'+esc(money(actual)+" / "+money(budget))+'">'+
+    '<i class="a'+(over?" over":"")+'" style="width:'+pa.toFixed(2)+'%"></i>'+
+    '<i class="c" style="width:'+pc.toFixed(2)+'%"></i>'+
+    '<u style="inset-inline-start:'+pb.toFixed(2)+'%"></u></div>';
+}
+
+const catTotals = pid => {
+  const out={}; CAT.forEach(([k])=>out[k]={budget:0,actual:0});
+  costCodes(pid).forEach(c=>{
+    const a=ccActual(c).by;
+    CAT.forEach(([k])=>{ out[k].budget=R2(out[k].budget+(+c.budget[k]||0));
+      out[k].actual=R2(out[k].actual+(+a[k]||0)); });
+  });
+  return out;
+};
+
+view("costanalysis",{label:"Cost Analysis",code:"CST",group:"Contracts",render(m){
+  const withCodes=DB.projects.filter(p=>costCodes(p.id).length);
+  if(!withCodes.length){
+    m.appendChild(page("Cost Analysis",""));
+    m.appendChild(h('<div class="empty"><b>'+esc(isAR()?"لا توجد عقود بموازنة":"No contracts have a budget")+
+      '</b>'+esc(isAR()?"احسب تقديراً ورسِّه ليصبح موازنة المشروع."
+        :"Price an estimate and award it, and it becomes the project's budget.")+'</div>'));
+    return;
+  }
+  if(!TAB.caProj||!withCodes.some(p=>p.id===TAB.caProj)) TAB.caProj=withCodes[0].id;
+  const p=withCodes.find(x=>x.id===TAB.caProj);
+
+  m.appendChild(page("Cost Analysis",
+    isAR()?"أين تذهب النقود في كل عقد، وهل تذهب حيث سُعِّرت"
+      :"Where the money is going on each contract, and whether it is going where it was priced to go.",
+    [{label:"Print project account",fn:()=>printProjectAccount(p)}]));
+
+  /* which contract */
+  const bar=h('<div class="bar" style="margin-bottom:14px"></div>');
+  const sel=h('<select class="inp" style="max-width:400px"></select>');
+  withCodes.forEach(x=>{
+    const o=h('<option value="'+esc(x.id)+'">'+esc(x.code+" — "+x.name)+'</option>');
+    if(x.id===p.id) o.selected=true; sel.appendChild(o);
+  });
+  sel.onchange=()=>{ TAB.caProj=sel.value; draw(); };
+  bar.appendChild(sel);
+  m.appendChild(bar);
+
+  const tv=tabs("ca",[["code","By bill item",costCodes(p.id).length],
+    ["cat","By resource"],["txn","Transactions",projectCostRows(p.id).length],
+    ["all","All contracts",withCodes.length]]);
+  m.appendChild(tv.el);
+
+  if(tv.cur==="all") return caAllContracts(m,withCodes);
+
+  const c=cvr(p), w=workDone(p);
+  const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(168px,1fr))"></div>');
+  [["Contract value",money(c.revised)],
+   ["Budget",money(c.budget)],
+   ["Cost to date",money(c.actual), c.budget?Math.round(c.actual/c.budget*1000)/10+"% "+(isAR()?"من الموازنة":"of budget"):""],
+   ["Committed",money(c.committed)],
+   ["Forecast cost",money(c.forecast),"",c.overrun>0?"neg":"pos"],
+   ["Value of work done",money(w.vowd),w.pctComplete+"% "+t("complete")],
+   ["Margin forecast",money(c.marginForecast),
+     c.revised?Math.round(c.marginForecast/c.revised*1000)/10+"%":"",c.marginForecast<0?"neg":"pos"],
+   ["Over or under budget",money(R2(-c.overrun)),"",c.overrun>0?"neg":"pos"]
+  ].forEach(x=>g.appendChild(stat(x[0],x[1],x[2],x[3])));
+  m.appendChild(g); m.appendChild(h('<div style="height:14px"></div>'));
+
+  if(c.overrun>0) m.appendChild(h('<div class="card" style="border-color:var(--maroon);background:var(--maroon-soft);margin-bottom:14px"><div class="body"><b style="color:var(--maroon)"><span class="flagdot"></span>'+
+    esc(isAR()?"التوقّع يتجاوز الموازنة بمقدار "+money(c.overrun)
+      :"Forecast cost is "+money(c.overrun)+" above budget")+'</b><br><span style="color:var(--ink-soft)">'+
+    esc(isAR()?"التكلفة المتكبدة زائد ما ارتُبط به ولم يُفوتر، مقابل ما سُعِّرت به الأعمال."
+      :"Cost incurred plus what is committed and not yet invoiced, against what the work was priced at.")+
+    '</span></div></div>'));
+
+  if(tv.cur==="code") caByCode(m,p);
+  else if(tv.cur==="cat") caByCategory(m,p);
+  else caTransactions(m,p);
+}});
+
+/* ---- by bill item: the way the job was priced ---- */
+function caByCode(m,p){
+  const rows=costCodes(p.id);
+  m.appendChild(card("Cost by bill item",table([
+    {h:"Code",r:c=>'<span class="code">'+esc(c.code)+'</span>'},
+    {h:"Section",r:c=>esc(c.section||"—")},
+    {h:"Description",r:c=>esc(c.desc)},
+    {h:"Budget",num:1,r:c=>money(ccBudget(c))},
+    {h:"Actual",num:1,r:c=>money(ccActual(c).total)},
+    {h:"Committed",num:1,r:c=>{const k=ccCommitted(c);return k?money(k):"—";}},
+    {h:"Forecast",num:1,r:c=>'<b>'+money(ccForecast(c))+'</b>'},
+    {h:"Variance",num:1,cls:c=>R2(ccBudget(c)-ccForecast(c))<0?"neg":"pos",
+     r:c=>money(R2(ccBudget(c)-ccForecast(c)))},
+    {h:"Spend against budget",w:"170px",
+     r:c=>costBar(ccActual(c).total,ccCommitted(c),ccBudget(c))},
+    {h:"%",num:1,cls:c=>ccBudget(c)&&ccForecast(c)>ccBudget(c)?"neg":"",
+     r:c=>ccBudget(c)?Math.round(ccForecast(c)/ccBudget(c)*1000)/10+"%":"—"}
+  ],rows,{onRow:c=>costDetailModal(c)})));
+  m.appendChild(h('<p style="margin-top:10px;color:var(--ink-soft);font-size:12.5px">'+
+    esc(isAR()?"اضغط أي بند لعرض كل حركة وراءه. الخط الرأسي في الشريط هو حد الموازنة."
+      :"Click any line for every transaction behind it. The vertical mark on the bar is the budget.")+'</p>'));
+}
+
+/* ---- by resource: the way the buyer thinks ---- */
+function caByCategory(m,p){
+  const tot=catTotals(p.id);
+  const budget=R2(CAT.reduce((s,[k])=>s+tot[k].budget,0));
+  const actual=R2(CAT.reduce((s,[k])=>s+tot[k].actual,0));
+  const rows=CAT.map(([k,label,labelAr])=>({k,label:isAR()?labelAr:label,
+    budget:tot[k].budget,actual:tot[k].actual,
+    variance:R2(tot[k].budget-tot[k].actual),
+    shareB: budget?Math.round(tot[k].budget/budget*1000)/10:0,
+    shareA: actual?Math.round(tot[k].actual/actual*1000)/10:0}))
+    .filter(r=>r.budget||r.actual);
+
+  m.appendChild(card("Cost by resource",table([
+    {h:"Resource",r:r=>'<b>'+esc(r.label)+'</b>'},
+    {h:"Budget",num:1,r:r=>money(r.budget)},
+    {h:"Share of budget",num:1,r:r=>r.shareB+"%"},
+    {h:"Actual",num:1,r:r=>money(r.actual)},
+    {h:"Share of spend",num:1,r:r=>r.shareA+"%"},
+    {h:"Variance",num:1,cls:r=>r.variance<0?"neg":"pos",r:r=>money(r.variance)},
+    {h:"Spend against budget",w:"170px",r:r=>costBar(r.actual,0,r.budget)},
+    {h:"%",num:1,cls:r=>r.budget&&r.actual>r.budget?"neg":"",
+     r:r=>r.budget?Math.round(r.actual/r.budget*1000)/10+"%":"—"}
+  ],rows)));
+
+  const shift=rows.filter(r=>Math.abs(r.shareA-r.shareB)>5);
+  if(shift.length) m.appendChild(h('<div class="card" style="border-color:var(--amber);background:var(--amber-soft);margin-top:12px"><div class="body"><b style="color:var(--amber)">'+
+    esc(isAR()?"تركيبة التكلفة تغيّرت عمّا سُعِّر به":"The cost mix has moved away from how the job was priced")+
+    '</b><br><span style="color:var(--ink-soft)">'+
+    shift.map(r=>esc(r.label+": "+(isAR()?"سُعِّر ":"priced at ")+r.shareB+"%, "+
+      (isAR()?"وأُنفق ":"spent ")+r.shareA+"%")).join(" · ")+
+    '</span></div></div>'));
+}
+
+/* ---- transactions: what the accountant needs ---- */
+function caTransactions(m,p){
+  const all=projectCostRows(p.id);
+  const bar=h('<div class="bar" style="margin-bottom:12px"></div>');
+  const catSel=h('<select class="inp" style="max-width:220px"><option value="">'+
+    esc(isAR()?"كل الموارد":"Every resource")+'</option>'+
+    CAT.map(c=>'<option value="'+c[0]+'">'+esc(isAR()?c[2]:c[1])+'</option>').join("")+'</select>');
+  const codeSel=h('<select class="inp" style="max-width:280px"><option value="">'+
+    esc(isAR()?"كل البنود":"Every bill item")+'</option>'+
+    costCodes(p.id).map(c=>'<option value="'+esc(c.code)+'">'+esc(c.code+" · "+c.desc)+'</option>').join("")+
+    '</select>');
+  bar.appendChild(catSel); bar.appendChild(codeSel);
+  m.appendChild(bar);
+  const box=h('<div></div>'); m.appendChild(box);
+
+  const render=()=>{
+    const rows=all.filter(r=>(!catSel.value||r.category===catSel.value)&&
+      (!codeSel.value||r.code===codeSel.value));
+    box.innerHTML="";
+    box.appendChild(card("Every cost charged to this contract",table([
+      {h:"Date",r:r=>fmtDate(r.date)},
+      {h:"Voucher",r:r=>'<span class="code">'+esc(r.no)+'</span>'},
+      {h:"Source",r:r=>'<span class="tag">'+esc(t(r.source))+'</span>'},
+      {h:"Cost code",r:r=>r.code?'<span class="code">'+esc(r.code)+'</span>':"—"},
+      {h:"Resource",r:r=>{const c=CAT.find(x=>x[0]===r.category);
+        return esc(c?(isAR()?c[2]:c[1]):r.category);}},
+      {h:"Account",r:r=>'<span class="code">'+esc(r.account)+'</span> '+esc(acctName(r.account))},
+      {h:"Supplier",r:r=>r.party?esc(suppName(r.party)||custName(r.party)):"—"},
+      {h:"Description",r:r=>esc((r.memo||"").slice(0,46))},
+      {h:"Amount",num:1,r:r=>money(r.amount)}
+    ],rows,{emptyTitle:"Nothing matches"})));
+    box.appendChild(h('<p style="margin-top:10px;font-family:var(--data);text-align:end">'+
+      rows.length+" "+esc(isAR()?"حركة":"transactions")+" · <b>"+
+      qr(R2(rows.reduce((s,r)=>s+r.amount,0)))+"</b></p>"));
+  };
+  catSel.onchange=render; codeSel.onchange=render; render();
+}
+
+/* ---- all contracts on one page ---- */
+function caAllContracts(m,list){
+  const pos=list.map(p=>({p,c:cvr(p),w:workDone(p)}));
+  const t2=k=>R2(pos.reduce((s,x)=>s+(+x.c[k]||0),0));
+  m.appendChild(card("Cost analysis across every contract",table([
+    {h:"",w:"18px",r:x=>x.c.overrun>0?'<span class="flagdot"></span>':""},
+    {h:"Project",r:x=>'<span class="code">'+esc(x.p.code)+'</span> '+esc(x.p.name)},
+    {h:"Client",r:x=>esc(custName(x.p.customer))},
+    {h:"Contract value",num:1,r:x=>money(x.c.revised)},
+    {h:"Budget",num:1,r:x=>money(x.c.budget)},
+    {h:"Cost to date",num:1,r:x=>money(x.c.actual)},
+    {h:"Committed",num:1,r:x=>x.c.committed?money(x.c.committed):"—"},
+    {h:"Forecast",num:1,r:x=>'<b>'+money(x.c.forecast)+'</b>'},
+    {h:"Variance",num:1,cls:x=>x.c.overrun>0?"neg":"pos",r:x=>money(R2(-x.c.overrun))},
+    {h:"Spend against budget",w:"160px",r:x=>costBar(x.c.actual,x.c.committed,x.c.budget)},
+    {h:"Margin forecast",num:1,cls:x=>x.c.marginForecast<0?"neg":"pos",
+     r:x=>money(x.c.marginForecast)},
+    {h:"%",num:1,r:x=>x.c.revised?Math.round(x.c.marginForecast/x.c.revised*1000)/10+"%":"—"}
+  ],pos,{onRow:x=>{TAB.caProj=x.p.id;TAB.ca="code";draw();}})));
+
+  const g=h('<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:14px"></div>');
+  g.appendChild(stat("Budget",money(t2("budget"))));
+  g.appendChild(stat("Cost to date",money(t2("actual"))));
+  g.appendChild(stat("Committed",money(t2("committed"))));
+  g.appendChild(stat("Forecast cost",money(t2("forecast"))));
+  g.appendChild(stat("Margin forecast",money(t2("marginForecast")),"",
+    t2("marginForecast")<t2("marginPriced")?"neg":"pos"));
+  m.appendChild(g);
+
+  /* the same resource split, across the whole business */
+  const agg={}; CAT.forEach(([k])=>agg[k]={budget:0,actual:0});
+  list.forEach(p=>{ const t3=catTotals(p.id);
+    CAT.forEach(([k])=>{ agg[k].budget=R2(agg[k].budget+t3[k].budget);
+      agg[k].actual=R2(agg[k].actual+t3[k].actual); }); });
+  const rows=CAT.map(([k,label,labelAr])=>({label:isAR()?labelAr:label,
+    budget:agg[k].budget,actual:agg[k].actual,variance:R2(agg[k].budget-agg[k].actual)}))
+    .filter(r=>r.budget||r.actual);
+  m.appendChild(h('<div style="height:14px"></div>'));
+  m.appendChild(card("Where the money goes, across the business",table([
+    {h:"Resource",r:r=>'<b>'+esc(r.label)+'</b>'},
+    {h:"Budget",num:1,r:r=>money(r.budget)},
+    {h:"Actual",num:1,r:r=>money(r.actual)},
+    {h:"Variance",num:1,cls:r=>r.variance<0?"neg":"pos",r:r=>money(r.variance)},
+    {h:"Spend against budget",w:"200px",r:r=>costBar(r.actual,0,r.budget)}
+  ],rows)));
 }
 
 </script>
